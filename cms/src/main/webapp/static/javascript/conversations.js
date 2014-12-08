@@ -84,7 +84,7 @@ Conversation.prototype.hasOlder = function(id, offset) {
         url: "/resource/" + THIS.cid + "/getNumberOfFirstLevelComments",
         success: function(data, textStatus, jqxhr){
         	if(data > offset) {
-        		var more = THIS.getMoreDialog(id, "Older");
+        		var more = THIS.getMoreDialog(id, "Older", "(" + (data - offset) + ")");
         		$("#" + id + "-conversation").prepend(more);
         	} else {
         		// No more
@@ -113,14 +113,16 @@ Conversation.prototype.hasMore = function(id, offset) {
     });
 }
 
-Conversation.prototype.getMoreDialog = function(id, reversed) {
+Conversation.prototype.getMoreDialog = function(id, reversed, extra) {
 	var text = reversed ? "Older" : "newer";
 	var div = document.createElement("div");
-	div.innerHTML = text;
+	div.innerHTML = text + extra;
 	div.style.border = "2px solid";
 	div.style.textAlign = "center";
 	div.style.backgroundColor = "#998877";
-	div.style.paddingBottom = "10px";
+	div.style.marginBottom = "10px";
+	div.style.marginTop = "10px";
+	
 	var THIS = this;
 	$(div).on('click', function(){
 		THIS.getComments(id, reversed);
