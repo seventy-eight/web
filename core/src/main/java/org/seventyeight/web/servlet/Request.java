@@ -232,6 +232,10 @@ public class Request extends HttpServletRequestWrapper implements CallContext {
 			} catch (ServletException e) {
 				logger.fatal("The request was not multipart, " + e.getMessage());
 				isMultiPart = false;
+			} catch(IllegalStateException e) {
+				logger.fatal("The request was not multipart(2), " + e.getMessage());
+				e.printStackTrace();
+				isMultiPart = false;
 			}
 	        
 	        if(!isMultiPart) {
@@ -243,12 +247,14 @@ public class Request extends HttpServletRequestWrapper implements CallContext {
 	            }
 	        }
 	
-	    	try {
-				json = JsonUtils.getJsonFromField(this);
-				return json;
-			} catch (JsonException e) {
-	            logger.debug( "No json field associated with this request, {}", e.getMessage());
-			}
+	        if(json == null) {
+		    	try {
+					json = JsonUtils.getJsonFromField(this);
+					return json;
+				} catch (JsonException e) {
+		            logger.debug( "No json field associated with this request, {}", e.getMessage());
+				}
+	        }
 	    	
 	    	json = new JsonObject();
     	}

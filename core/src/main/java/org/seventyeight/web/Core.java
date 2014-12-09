@@ -565,6 +565,7 @@ public abstract class Core implements CoreSystem {
         }
         */
 
+        
         addExtension( descriptor );
 
 

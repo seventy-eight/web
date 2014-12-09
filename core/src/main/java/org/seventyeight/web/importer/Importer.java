@@ -3,37 +3,22 @@ package org.seventyeight.web.importer;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.URLEncoder;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpDelete;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
-import org.kohsuke.args4j.Option;
-import org.seventyeight.web.Core;
-import org.seventyeight.web.nodes.User;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -169,7 +154,7 @@ public class Importer {
 					CommentInserter.Arguments ca = new CommentInserter.Arguments(topic.conversation, context.getUserMap().get(userId), topic.title, postText, parent, timestamp);
 					
 					String id = coi.act(ca);
-					logger.debug("ID={}", id);
+					logger.debug("Comment ID={}, user={}, new={}", id, userId, context.getUserMap().get(userId));
 					
 					ChangeOwnership.Arguments coa = new ChangeOwnership.Arguments(id, context.getUserMap().get(userId));
 					

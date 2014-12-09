@@ -34,7 +34,7 @@
 	}); 
 	
 	function submitForm(j) {
-	alert(JSON.stringify(j));
+		alert(JSON.stringify(j));
         $.ajax({
             type: "POST",
             url: 'create',
@@ -42,7 +42,7 @@
             contentType:"application/json; charset=utf-8",
   			dataType:"json",
             success: function(data, textStatus, jqxhr){
-                window.location = "/resource/" + data.id;
+            	window.location = "/resource/" + data.identifier;
             },
             error: function(ajax, text, error) {alert(error); }
         });

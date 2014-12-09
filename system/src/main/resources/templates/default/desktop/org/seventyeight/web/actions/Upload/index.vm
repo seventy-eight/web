@@ -3,7 +3,7 @@
 #menuBlock($item)
 
 <div id="fileupload">
-    <form method="post" enctype="multipart/form-data" action="upload?noJsonBody=1">
+    <form method="post" enctype="multipart/form-data" action="upload">
     <input type="hidden" name="testing" value="hej">
         <div class="fileupload-buttonbar">
             <label class="fileinput-button">
