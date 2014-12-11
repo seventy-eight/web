@@ -7,7 +7,7 @@ import org.seventyeight.web.model.CallContext;
 import org.seventyeight.web.model.Runner;
 import org.seventyeight.web.model.RunnerException;
 import org.seventyeight.web.servlet.Request;
-import org.seventyeight.web.servlet.Response;
+import org.seventyeight.web.servlet.WebResponse;
 
 public class MethodRunner implements Runner {
 
@@ -22,7 +22,7 @@ public class MethodRunner implements Runner {
 	}
 	
 	@Override
-	public void run(Response response) throws RunnerException {
+	public WebResponse run() throws RunnerException {
 		try {
 			method.invoke( object, context, response );
 		} catch(InvocationTargetException e) {

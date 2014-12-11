@@ -78,7 +78,7 @@ public class ViewWrapper implements Node, Autonomous {
         try {
             Runner runner = ExecuteUtils.getRunner(request, node, template, offset );
             runner.injectContext(request);
-            runner.run(response);
+            runner.run();
             if( offset == null ) {
                 //ExecuteUtils.execute( request, response, node, "index" );
                 //request.getContext().put( "content", Core.getInstance().getTemplateManager().getRenderer( request ).renderObject( node, template + ".vm" ) );

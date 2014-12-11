@@ -117,7 +117,7 @@ public class Rest extends HttpServlet {
 		        // Render the page
 		        Runner runner = core.render( request );
 		        runner.injectContext(request);
-		        runner.run(response);
+		        runner.run();
 		        request.getUser().setSeen();
 		    } catch( CoreException e ) {
 		        e.printStackTrace();
