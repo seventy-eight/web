@@ -5,7 +5,7 @@ import java.io.IOException;
 import org.seventyeight.web.model.CallContext;
 import org.seventyeight.web.model.Runner;
 import org.seventyeight.web.model.RunnerException;
-import org.seventyeight.web.servlet.WebResponse;
+import org.seventyeight.web.servlet.responses.WebResponse;
 
 public class RedirectRunner implements Runner {
 
