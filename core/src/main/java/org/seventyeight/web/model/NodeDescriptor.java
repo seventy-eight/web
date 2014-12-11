@@ -123,6 +123,7 @@ public abstract class NodeDescriptor<T extends AbstractNode<T>> extends Descript
         	return;
         }
         
+        
         logger.debug( "Creating " + title );
         try {
         	T instance = newInstance( request, this);
