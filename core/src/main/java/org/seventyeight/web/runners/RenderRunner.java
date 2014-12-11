@@ -24,13 +24,14 @@ public class RenderRunner implements Runner {
 	}
 	
 	@Override
-	public WebResponse run() throws RunnerException {
+	public WebResponse run() {
 		try {
 			WebResponse r = new WebResponse();
 			r.append(context.getCore().getTemplateManager().getRenderer(context).renderClass( object, imposter, method + ".vm"));
 			return r;
 		} catch(Exception e) {
-			throw new RunnerException("Unable to run render " + method, e);
+			//throw new RunnerException("Unable to run render " + method, e);
+			return new WebResponse().setCode(500).setHeader("Unable to render " + method + " for " + imposter);
 		}
 	}
 

@@ -10,6 +10,7 @@ import org.seventyeight.web.model.Autonomous;
 import org.seventyeight.web.model.Runner;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
+import org.seventyeight.web.servlet.responses.WebResponse;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -113,11 +114,12 @@ public class Rest extends HttpServlet {
 		    request.getStopWatch().stop( "Authentication" );
 		    request.getStopWatch().start( "Render page" );
 		
+		    WebResponse r = null;
 		    try {
 		        // Render the page
 		        Runner runner = core.render( request );
 		        runner.injectContext(request);
-		        runner.run();
+		        r = runner.run();
 		        request.getUser().setSeen();
 		    } catch( CoreException e ) {
 		        e.printStackTrace();
@@ -131,6 +133,8 @@ public class Rest extends HttpServlet {
 		        e.printStackTrace();
 		        generateException( request, rsp.getWriter(), e, e.getMessage() );
 		    }
+		    
+		    r.respond(null, response);
         }
 
         sw.stop();
