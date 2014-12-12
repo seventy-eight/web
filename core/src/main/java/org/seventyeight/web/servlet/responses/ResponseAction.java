@@ -4,8 +4,9 @@ import java.io.IOException;
 
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
+import org.seventyeight.web.servlet.WebResponse;
 
-public class WebResponse {
+public class ResponseAction {
 	
 	private StringBuilder buffer = new StringBuilder();
 	
@@ -15,23 +16,39 @@ public class WebResponse {
     /** And the header is ok */
     protected String header = "OK";
     
-    public WebResponse setCode(int code) {
+    public ResponseAction setCode(int code) {
     	this.code = code;
     	return this;
     }
     
-    public WebResponse setHeader(String header) {
+    public ResponseAction setHeader(String header) {
     	this.header = header;
     	return this;
     }
     
-    public WebResponse append(String s) {
+    public ResponseAction append(String s) {
     	this.buffer.append(s);
     	return this;
     }
     
-    public void respond(Request request, Response response) throws IOException {
-    	response.setIntHeader(header, code);
+    public int getCode() {
+    	return code;
+    }
+    
+    public String getHeader() {
+    	return header;
+    }
+    
+    public boolean hasBody() {
+    	return buffer.length() > 0;
+    }
+    
+    public StringBuilder getBuffer() {
+    	return buffer;
+    }
+    
+    public void respond(Request request, WebResponse response) throws IOException {
+		response.setIntHeader(header, code);
     	if(buffer.length() > 0) {
     		response.getWriter().write(buffer.toString());
     	} else {

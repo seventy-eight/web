@@ -1,6 +1,6 @@
 package org.seventyeight.web.servlet.responses;
 
-public class RedirectResponse extends WebResponse {
+public class RedirectResponse extends ResponseAction {
 
 	private String url;
 	

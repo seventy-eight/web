@@ -10,7 +10,9 @@ import org.seventyeight.web.model.Autonomous;
 import org.seventyeight.web.model.Runner;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
-import org.seventyeight.web.servlet.responses.WebResponse;
+import org.seventyeight.web.servlet.WebResponse;
+import org.seventyeight.web.servlet.responses.ErrorResponse;
+import org.seventyeight.web.servlet.responses.ResponseAction;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -68,7 +70,7 @@ public class Rest extends HttpServlet {
         Request request = new Request( rqs, core.getDefaultTemplate() );
         request.setLocaleFromCookie( "language" );
 
-        Response response = new Response( rsp );
+        WebResponse response = new WebResponse( rsp );
         response.setCharacterEncoding( "UTF-8" );
 
         request.setStopWatch( sw );
@@ -90,10 +92,12 @@ public class Rest extends HttpServlet {
         request.setTheme( core.getDefaultTheme() );
 
         request.getStopWatch().stop( rqs.getRequestURI() );
+        
+        Response r = new Response();
 
         if(request.getRequestParts().length > 0 && request.getRequestParts()[0].equalsIgnoreCase("static")) {
         	try {
-				((Autonomous)core.getRoot().getChild("static")).autonomize(request, response);
+				((Autonomous)core.getRoot().getChild("static")).autonomize(request, r);
 			} catch (Throwable e) {
 				throw new ServletException(e);
 			}
@@ -103,7 +107,7 @@ public class Rest extends HttpServlet {
             logger.debug( "THE USER: {}", request.getUser() );
             try {
                 logger.debug( "AUTHENTICATING" );
-                core.getAuthentication().authenticate( request, response );
+                core.getAuthentication().authenticate( request, r );
             } catch( AuthenticationException e ) {
                 logger.warn( "Unable to authenticate", e );
             }
@@ -114,27 +118,31 @@ public class Rest extends HttpServlet {
 		    request.getStopWatch().stop( "Authentication" );
 		    request.getStopWatch().start( "Render page" );
 		
-		    WebResponse r = null;
 		    try {
 		        // Render the page
 		        Runner runner = core.render( request );
 		        runner.injectContext(request);
-		        r = runner.run();
+		        runner.run(r);
 		        request.getUser().setSeen();
 		    } catch( CoreException e ) {
 		        e.printStackTrace();
+		        //r = new ErrorResponse(e);
+		        r.setAction(new ErrorResponse(e));
+		        /*
 		        if( response.isRenderingMain() ) {
 		            response.renderError( request, e );
 		        } else {
 		            response.sendError( e.getCode(), e.getMessage() );
 		        }
+		        */
 		    } catch( Throwable e ) {
 		        logger.error( "CAUGHT ERROR" );
 		        e.printStackTrace();
-		        generateException( request, rsp.getWriter(), e, e.getMessage() );
+		        //generateException( request, rsp.getWriter(), e, e.getMessage() );
+		        r.setAction(new ErrorResponse(e));
 		    }
 		    
-		    r.respond(null, response);
+		    r.respond(request, response);
         }
 
         sw.stop();

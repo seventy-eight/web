@@ -4,8 +4,9 @@ import org.seventyeight.web.model.Autonomous;
 import org.seventyeight.web.model.CallContext;
 import org.seventyeight.web.model.Runner;
 import org.seventyeight.web.servlet.Request;
+import org.seventyeight.web.servlet.Response;
 import org.seventyeight.web.servlet.responses.ErrorResponse;
-import org.seventyeight.web.servlet.responses.WebResponse;
+import org.seventyeight.web.servlet.responses.ResponseAction;
 
 public class AutonomousRunner implements Runner {
 
@@ -17,11 +18,11 @@ public class AutonomousRunner implements Runner {
 	}
 	
 	@Override
-	public WebResponse run() {
+	public void run(Response response) {
 		try {
-			return a.autonomize(context);
+			a.autonomize(context, response);
 		} catch (Exception e) {
-			return new ErrorResponse(e.getCause()).setCode(500).setHeader("Unable to run autonomous, " + a);
+			//return new ErrorResponse(e.getCause()).setCode(500).setHeader("Unable to run autonomous, " + a);
 		}
 	}
 

@@ -10,7 +10,7 @@ import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
 import org.seventyeight.web.servlet.responses.ErrorResponse;
 import org.seventyeight.web.servlet.responses.FileResponse;
-import org.seventyeight.web.servlet.responses.WebResponse;
+import org.seventyeight.web.servlet.responses.ResponseAction;
 
 import java.io.File;
 import java.io.IOException;
@@ -40,7 +40,7 @@ public class ThemeFiles implements Autonomous, Node {
     }
 
     @Override
-    public WebResponse autonomize( Request request ) throws IOException {
+    public ResponseAction autonomize( Request request ) throws IOException {
         String requestedFile = request.getPathInfo();
 
         requestedFile = requestedFile.replaceFirst( "^/?.*?/", "" );

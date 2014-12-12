@@ -5,8 +5,9 @@ import java.io.IOException;
 import org.seventyeight.web.model.CallContext;
 import org.seventyeight.web.model.Runner;
 import org.seventyeight.web.model.RunnerException;
+import org.seventyeight.web.servlet.Response;
 import org.seventyeight.web.servlet.responses.RedirectResponse;
-import org.seventyeight.web.servlet.responses.WebResponse;
+import org.seventyeight.web.servlet.responses.ResponseAction;
 
 public class RedirectRunner implements Runner {
 
@@ -17,8 +18,8 @@ public class RedirectRunner implements Runner {
 	}
 	
 	@Override
-	public WebResponse run() {
-		return new RedirectResponse(url);
+	public void run(Response response) {
+		//return new RedirectResponse(url);
 	}
 
 	@Override

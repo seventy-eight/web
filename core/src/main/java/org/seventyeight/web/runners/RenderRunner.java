@@ -7,7 +7,8 @@ import org.seventyeight.web.model.NotFoundException;
 import org.seventyeight.web.model.Runner;
 import org.seventyeight.web.model.RunnerException;
 import org.seventyeight.web.servlet.Request;
-import org.seventyeight.web.servlet.responses.WebResponse;
+import org.seventyeight.web.servlet.Response;
+import org.seventyeight.web.servlet.responses.ResponseAction;
 
 public class RenderRunner implements Runner {
 
@@ -24,14 +25,14 @@ public class RenderRunner implements Runner {
 	}
 	
 	@Override
-	public WebResponse run() {
+	public void run(Response roidesponse) {
 		try {
-			WebResponse r = new WebResponse();
-			r.append(context.getCore().getTemplateManager().getRenderer(context).renderClass( object, imposter, method + ".vm"));
-			return r;
+			//WebResponse r = new WebResponse();
+			//r.append(context.getCore().getTemplateManager().getRenderer(context).renderClass( object, imposter, method + ".vm"));
+			//return r;
 		} catch(Exception e) {
 			//throw new RunnerException("Unable to run render " + method, e);
-			return new WebResponse().setCode(500).setHeader("Unable to render " + method + " for " + imposter);
+			//return new WebResponse().setCode(500).setHeader("Unable to render " + method + " for " + imposter);
 		}
 	}
 

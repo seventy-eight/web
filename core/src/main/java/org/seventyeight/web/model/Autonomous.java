@@ -1,11 +1,11 @@
 package org.seventyeight.web.model;
 
 import org.seventyeight.web.servlet.Request;
-import org.seventyeight.web.servlet.responses.WebResponse;
+import org.seventyeight.web.servlet.Response;
 
 /**
  * @author cwolfgang
  */
 public interface Autonomous {
-    public WebResponse autonomize( Request request ) throws Exception;
+    public void autonomize( Request request, Response response ) throws Exception;
 }
