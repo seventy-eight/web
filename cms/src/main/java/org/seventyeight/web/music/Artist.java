@@ -13,6 +13,7 @@ import org.seventyeight.web.model.Resource;
 import org.seventyeight.web.model.ResourceDescriptor;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
+import org.seventyeight.web.servlet.responses.WebResponse;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -42,18 +43,19 @@ public class Artist extends Resource<Artist> {
 		}
 
         @GetMethod
-        public void doGetArtists(Request request, Response response) throws IOException {
-            response.setRenderType( Response.RenderType.NONE );
+        public WebResponse doGetArtists(Request request) throws IOException {
+            //response.setRenderType( Response.RenderType.NONE );
 
             String term = request.getValue( "term", "" );
 
             if( term.length() > 1 ) {
                 MongoDBQuery query = new MongoDBQuery().is( "type", "artist" ).regex( "title", "(?i)" + term + ".*" );
 
-                PrintWriter writer = response.getWriter();
-                writer.print( MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).find( query, 0, 10 ) );
+                //PrintWriter writer = response.getWriter();
+                //writer.print( MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).find( query, 0, 10 ) );
+                return WebResponse.makeJsonResponse().appendBody(MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).find( query, 0, 10 ));
             } else {
-                response.getWriter().write( "{}" );
+                return WebResponse.makeEmptyJsonResponse();
             }
         }
 

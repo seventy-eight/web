@@ -18,6 +18,7 @@ import org.seventyeight.web.model.NotFoundException;
 import org.seventyeight.web.nodes.User;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
+import org.seventyeight.web.servlet.responses.WebResponse;
 
 import com.google.gson.JsonObject;
 
@@ -87,20 +88,22 @@ public class FollowAction extends Action<FollowAction> {
 	}
 	
 	@PostMethod
-	public void doIndex(Request request, Response response) throws IOException {
+	public WebResponse doIndex(Request request) throws IOException {
     	String id = request.getValue("id");
     	follow(id);
-    	response.setContentType("application/json");
-    	response.getWriter().print("{\"following\":true}");
-    	response.getWriter().flush();
+    	//response.setContentType("application/json");
+    	//response.getWriter().print("{\"following\":true}");
+    	//response.getWriter().flush();
+    	return WebResponse.makeJsonResponse().appendBody("{\"following\":true}");
 	}
 	
     @GetMethod
-    public void doIsFollowing(Request request, Response response) throws IOException {
+    public WebResponse doIsFollowing(Request request) throws IOException {
     	String id = request.getValue("id");
-    	response.setContentType("application/json");
-    	response.getWriter().print("{\"following\":" + (isFollowing(id) ? "true" : "false") + "}");
-    	response.getWriter().flush();
+    	//response.setContentType("application/json");
+    	//response.getWriter().print("{\"following\":" + (isFollowing(id) ? "true" : "false") + "}");
+    	//response.getWriter().flush();
+    	return WebResponse.makeJsonResponse().appendBody("{\"following\":" + (isFollowing(id) ? "true" : "false") + "}");
     }
     
     @GetMethod

@@ -15,6 +15,7 @@ import org.seventyeight.web.Core;
 import org.seventyeight.web.model.*;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
+import org.seventyeight.web.servlet.responses.WebResponse;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -36,9 +37,9 @@ public class Festival extends Resource<Festival> implements Getable<Event> {
     }
 
     @PostMethod
-    public void doIndex(Request request, Response response) throws ItemInstantiationException, NotFoundException {
+    public WebResponse doIndex(Request request) throws ItemInstantiationException, NotFoundException {
         logger.debug( "Adding event for {}", this );
-        response.setRenderType( Response.RenderType.NONE );
+        //response.setRenderType( Response.RenderType.NONE );
 
         String eventId = request.getValue( "resource", null );
 
@@ -46,8 +47,10 @@ public class Festival extends Resource<Festival> implements Getable<Event> {
             Event event = core.getNodeById( this, eventId );
             logger.debug( "Adding {} to {}", event, this );
             addEvent( event );
+            return new WebResponse();
         } else {
-            throw new IllegalArgumentException( "No event provided" );
+            //throw new IllegalArgumentException( "No event provided" );
+        	return new WebResponse().badRequest().setHeader("No event provided");
         }
     }
     

@@ -60,6 +60,16 @@ public class WebResponse {
     	return this;
     }
     
+    public WebResponse accepted() {
+    	this.code = 202;
+    	return this;
+    }
+    
+    public WebResponse badRequest() {
+    	this.code = 400;
+    	return this;
+    }
+    
     public WebResponse notFound() {
     	this.code = 404;
     	return this;
@@ -70,8 +80,8 @@ public class WebResponse {
     	return this;
     }
     
-    public WebResponse accepted() {
-    	this.code = 202;
+    public WebResponse conflict() {
+    	this.code = 409;
     	return this;
     }
     
