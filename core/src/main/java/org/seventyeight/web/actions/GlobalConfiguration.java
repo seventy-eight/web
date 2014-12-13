@@ -7,6 +7,7 @@ import org.seventyeight.web.Core;
 import org.seventyeight.web.model.*;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
+import org.seventyeight.web.servlet.responses.WebResponse;
 
 import java.io.IOException;
 
@@ -42,8 +43,9 @@ public class GlobalConfiguration implements Node, Parent {
     }
 
     @GetMethod
-    public void doGlobal( Request request, Response response ) throws IOException {
-        response.getWriter().println( "BOOOOOOM!" );
+    public WebResponse doGlobal( Request request ) throws IOException {
+        //response.getWriter().println( "BOOOOOOM!" );
+    	return new WebResponse().setHeader("BOOM");
     }
 
     @Override

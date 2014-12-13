@@ -105,8 +105,8 @@ public class Search implements Node {
      * Get a complete list of methods
      */
     @GetMethod
-    public void doComplete(Request request, Response response) {
-    	response.setContentType(Response.ContentType.JSON.toString());
+    public WebResponse doComplete(Request request) {
+    	//response.setContentType(Response.ContentType.JSON.toString());
     	
     	String query = request.getValue( "query", null );
     	
@@ -117,11 +117,14 @@ public class Search implements Node {
             visitor.visit( root );
 
         }
+        
+        return new WebResponse();
     }
 
     @GetMethod
-    public void doShow( Request request, Response response ) {
+    public WebResponse doShow( Request request) {
         logger.debug( "SHOW????!!!!" );
+        return new WebResponse();
     }
 
 

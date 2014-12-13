@@ -7,6 +7,8 @@ import org.seventyeight.web.Core;
 import org.seventyeight.web.model.Node;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
+import org.seventyeight.web.servlet.responses.RedirectResponse;
+import org.seventyeight.web.servlet.responses.WebResponse;
 
 import javax.servlet.http.Cookie;
 
@@ -41,8 +43,8 @@ public class LanguageAction implements Node {
     }
 
     @GetMethod
-    public void doSet( Request request, Response response ) throws IOException {
-        response.setRenderType( Response.RenderType.NONE );
+    public WebResponse doSet( Request request ) throws IOException {
+        //response.setRenderType( Response.RenderType.NONE );
 
         String language = request.getValue( "l", "english" );
         logger.debug( "Changing language to {}.", language );
@@ -50,10 +52,11 @@ public class LanguageAction implements Node {
         Cookie c = new Cookie( "language", language );
         c.setMaxAge( 10000 );
         c.setPath( "/" );
-        response.addCookie( c );
 
         String prev = request.getHeader("referer");
         logger.debug( "prev {}", prev );
-        response.sendRedirect( prev );
+        //response.sendRedirect( prev );
+        
+        return new RedirectResponse(prev).addCookie(c);
     }
 }

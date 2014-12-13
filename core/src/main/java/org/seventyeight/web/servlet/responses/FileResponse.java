@@ -15,7 +15,7 @@ public class FileResponse extends WebResponse {
 	}
 
 	@Override
-	public void respond(Request request, Response response) throws IOException {
+	public void writeBody(Request request, Response response) throws IOException {
 		response.deliverFile(request, file, true);
 	}
 }

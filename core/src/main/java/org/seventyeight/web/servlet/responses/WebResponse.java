@@ -1,7 +1,10 @@
 package org.seventyeight.web.servlet.responses;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+
+import javax.servlet.http.Cookie;
 
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.web.servlet.Request;
@@ -13,6 +16,8 @@ public class WebResponse {
 	public static final String CONTENT_TYPE_JSON = "application/json";
 	
 	private StringBuilder buffer = new StringBuilder();
+	
+	private List<Cookie> cookies = new ArrayList<Cookie>();
 	
 	/** By default, everything is ok */
     protected int code = 200;
@@ -90,7 +95,19 @@ public class WebResponse {
     	return this;
     }
     
-    public void respond(Request request, Response response) throws IOException {
+    public WebResponse addCookie(Cookie cookie) {
+    	cookies.add(cookie);
+    	return this;
+    }
+    
+    public final void respond(Request request, Response response) throws IOException {
+    	writeBody(request, response);
+    	for(Cookie c : cookies) {
+    		response.addCookie(c);
+    	}
+    }
+    
+    protected void writeBody(Request request, Response response) throws IOException {
     	response.setIntHeader(header, code);
     	if(buffer.length() > 0) {
     		response.getWriter().write(buffer.toString());

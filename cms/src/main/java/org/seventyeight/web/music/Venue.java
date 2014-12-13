@@ -142,18 +142,20 @@ public class Venue extends Resource<Venue> {
         }
 
         @GetMethod
-        public void doGetVenues(Request request, Response response) throws IOException {
-            response.setRenderType( Response.RenderType.NONE );
+        public WebResponse doGetVenues(Request request) throws IOException {
+            //response.setRenderType( Response.RenderType.NONE );
 
             String term = request.getValue( "term", "" );
 
             if( term.length() > 1 ) {
                 MongoDBQuery query = new MongoDBQuery().is( "type", "venue" ).regex( "title", "(?i)" + term + ".*" );
                 
-                PrintWriter writer = response.getWriter();
-                writer.print( MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).find( query, 0, 10 ) );
+                //PrintWriter writer = response.getWriter();
+                //writer.print( MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).find( query, 0, 10 ) );
+                return WebResponse.makeJsonResponse().appendBody(MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).find( query, 0, 10 ));
             } else {
-                response.getWriter().write( "{}" );
+                //response.getWriter().write( "{}" );
+                return WebResponse.makeEmptyJsonResponse();
             }
         }
 
