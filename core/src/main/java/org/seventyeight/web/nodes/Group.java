@@ -17,6 +17,8 @@ import org.seventyeight.web.authorization.Authorizable;
 import org.seventyeight.web.model.*;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
+import org.seventyeight.web.servlet.responses.JsonResponse;
+import org.seventyeight.web.servlet.responses.WebResponse;
 import org.seventyeight.web.utilities.JsonUtils;
 
 import java.io.IOException;
@@ -66,44 +68,46 @@ public class Group extends Resource<Group> implements Authorizable {
     }
     
     @PostMethod
-    public void doIndex(Request request, Response response) throws IOException {
+    public WebResponse doIndex(Request request) throws IOException {
     	String userId = request.getValue("user", null);
     	
     	if(userId == null) {
-    		response.setStatus(Response.SC_NOT_ACCEPTABLE);
-        	response.getWriter().print("No user provided");
-        	return;
+    		//response.setStatus(Response.SC_NOT_ACCEPTABLE);
+        	//response.getWriter().print("No user provided");
+        	return new WebResponse().setCode(406).setHeader("No user provided");
     	}
     	
 		try {
 			User user = core.getNodeById( this, userId );
 			addMember( user );
 
-	    	response.setStatus(Response.SC_ACCEPTED);
-	    	response.getWriter().print("{\"id\":\"" + getIdentifier() + "\"}");
+	    	//response.setStatus(Response.SC_ACCEPTED);
+	    	//response.getWriter().print("{\"id\":\"" + getIdentifier() + "\"}");
+	    	return new WebResponse().appendBody("{\"id\":\"" + getIdentifier() + "\"}").setCode(202);
 		} catch (Exception e) {
 			logger.error(e);
-    		response.setStatus(Response.SC_NOT_ACCEPTABLE);
-        	response.getWriter().print(e.getMessage());
+    		//response.setStatus(Response.SC_NOT_ACCEPTABLE);
+        	//response.getWriter().print(e.getMessage());
+			return new WebResponse().setCode(406).setHeader(e.getMessage());
 		}
 		
     }
     
     @PostMethod
-    public void doAdd(Request request, Response response) throws IOException {
+    public WebResponse doAdd(Request request) throws IOException {
     	JsonObject json = request.getJson();
         Core core = request.getCore();
         
         if(json == null) {
-        	response.setStatus(Response.SC_NOT_ACCEPTABLE);
-        	response.getWriter().print("No data provided");
-        	return;
+        	//response.setStatus(Response.SC_NOT_ACCEPTABLE);
+        	//response.getWriter().print("No data provided");
+        	return new WebResponse().setCode(406).setHeader("No data provided");
         }
         
         if(!json.has("users")) {
-        	response.setStatus(Response.SC_NOT_ACCEPTABLE);
-        	response.getWriter().print("No users provided");
-        	return;
+        	//response.setStatus(Response.SC_NOT_ACCEPTABLE);
+        	//response.getWriter().print("No users provided");
+        	return new WebResponse().setCode(406).setHeader("No users provided");
         }
         
         JsonArray missing = new JsonArray();
@@ -125,8 +129,9 @@ public class Group extends Resource<Group> implements Authorizable {
         result.addProperty("id", getIdentifier());
         result.add("missing", missing);
         
-    	response.setStatus(Response.SC_ACCEPTED);
-        response.getWriter().print(result.toString());
+    	//response.setStatus(Response.SC_ACCEPTED);
+        //response.getWriter().print(result.toString());
+        return new WebResponse().setCode(202).appendBody(result.toString());
     }
 
     public List<AbstractNode<?>> getActivities(Request request) throws NotFoundException, ItemInstantiationException {
@@ -234,17 +239,19 @@ public class Group extends Resource<Group> implements Authorizable {
         }
         
         @GetMethod
-        public void doGetGroups(Request request, Response response) throws IOException {
+        public WebResponse doGetGroups(Request request) throws IOException {
         	String term = request.getValue( "term", "" );
             boolean exact = request.getBoolean("exact", false);
 
             if( term.length() > 1 ) {
                 MongoDBQuery query = new MongoDBQuery().is( "type", "group" ).regex( "title", "(?i)" + term + (exact ? "" : ".*") );
 
-                PrintWriter writer = response.getWriter();
-                writer.print( MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).find( query, 0, 10 ) );
+                //PrintWriter writer = response.getWriter();
+                //writer.print( MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).find( query, 0, 10 ) );
+                return new WebResponse().appendBody(MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).find( query, 0, 10 ));
             } else {
-                response.getWriter().write( "{}" );
+                //response.getWriter().write( "{}" );
+            	return JsonResponse.empty();
             }
         }
 

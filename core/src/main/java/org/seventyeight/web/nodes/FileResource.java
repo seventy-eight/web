@@ -15,6 +15,8 @@ import org.seventyeight.web.extensions.filetype.FileType;
 import org.seventyeight.web.model.*;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
+import org.seventyeight.web.servlet.responses.FileResponse;
+import org.seventyeight.web.servlet.responses.WebResponse;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -60,10 +62,10 @@ public class FileResource extends UploadableNode<FileResource> {
     }
 
     @GetMethod
-    public void doFile( Request request, Response response ) throws IOException {
-        response.setRenderType( Response.RenderType.NONE );
-        response.deliverFile( request, getFile(), true );
-
+    public WebResponse doFile( Request request ) throws IOException {
+        //response.setRenderType( Response.RenderType.NONE );
+        //response.deliverFile( request, getFile(), true );
+    	return new FileResponse(getFile());
     }
 
     public static String getUploadDestination( Request request ) {

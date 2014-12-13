@@ -27,7 +27,7 @@ public class RenderRunner implements Runner {
 	public WebResponse run() {
 		try {
 			WebResponse r = new WebResponse();
-			r.append(context.getCore().getTemplateManager().getRenderer(context).renderClass( object, imposter, method + ".vm"));
+			r.appendBody(context.getCore().getTemplateManager().getRenderer(context).renderClass( object, imposter, method + ".vm"));
 			return r;
 		} catch(Exception e) {
 			//throw new RunnerException("Unable to run render " + method, e);

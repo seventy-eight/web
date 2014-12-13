@@ -1,7 +1,9 @@
 package org.seventyeight.web.servlet.responses;
 
 import java.io.IOException;
+import java.util.List;
 
+import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
 
@@ -25,8 +27,18 @@ public class WebResponse {
     	return this;
     }
     
-    public WebResponse append(String s) {
+    public WebResponse appendBody(String s) {
     	this.buffer.append(s);
+    	return this;
+    }
+    
+    public WebResponse appendBody(List<MongoDocument> documents) {
+		appendBody(documents.toString());
+		return this;
+    }
+    
+    public WebResponse appendBody(long l) {
+    	this.buffer.append(l);
     	return this;
     }
     

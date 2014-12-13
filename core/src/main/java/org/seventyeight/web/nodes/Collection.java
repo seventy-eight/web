@@ -20,6 +20,7 @@ import org.seventyeight.web.model.*;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
 import org.seventyeight.web.servlet.SearchHelper;
+import org.seventyeight.web.servlet.responses.WebResponse;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -120,16 +121,18 @@ public class Collection extends Resource<Collection> implements Getable<Node> {
     }
 
     @PostMethod
-    public void doAdd( Request request, Response response ) {
+    public WebResponse doAdd( Request request) {
         String id = request.getValue( "id", null );
         if( id != null ) {
             if( Resource.exists( id ) ) {
                 //addCall( id );
                 add(id);
                 save();
-                response.setStatus( HttpServletResponse.SC_OK );
+                //response.setStatus( HttpServletResponse.SC_OK );
+                return new WebResponse();
             } else {
-                response.setStatus( HttpServletResponse.SC_NOT_FOUND );
+                //response.setStatus( HttpServletResponse.SC_NOT_FOUND );
+            	return new WebResponse().;
             }
         } else {
             response.setStatus( HttpServletResponse.SC_BAD_REQUEST );
