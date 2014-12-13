@@ -11,6 +11,7 @@ import org.seventyeight.database.mongodb.MongoDBCollection;
 import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.utils.GetMethod;
+import org.seventyeight.utils.PostMethod;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.authorization.ACL;
 import org.seventyeight.web.extensions.MenuContributor;
@@ -103,8 +104,8 @@ public class Venue extends Resource<Venue> {
         return r;
     }
 
-    @GetMethod
-    public WebResponse doAddConcert(Request request) throws ItemInstantiationException, IOException {
+    @PostMethod
+    public WebResponse doIndex(Request request) throws ItemInstantiationException, IOException {
         //response.setRenderType( Response.RenderType.NONE );
 
         Concert.ConcertDescriptor descriptor = core.getDescriptor( Concert.class );
