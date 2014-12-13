@@ -5,6 +5,8 @@ import org.apache.logging.log4j.Logger;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
+import org.seventyeight.web.servlet.responses.ErrorResponse;
+import org.seventyeight.web.servlet.responses.WebResponse;
 import org.seventyeight.web.utilities.ExecuteUtils;
 
 import java.io.IOException;
@@ -63,7 +65,7 @@ public class ViewWrapper implements Node, Autonomous {
     }
 
     @Override
-    public void autonomize( Request request, Response response ) throws IOException {
+    public WebResponse autonomize( Request request ) throws IOException {
         logger.debug( "View wrapping " + node + "(" + offset + ")" );
 
         String template;
@@ -88,8 +90,9 @@ public class ViewWrapper implements Node, Autonomous {
                 //request.getContext().put( "content", Core.getInstance().getTemplateManager().getRenderer( request ).renderClass( node, offset, template + ".vm" ) );
             }
             //response.getWriter().print( Core.getInstance().getTemplateManager().getRenderer( request ).render( request.getTemplate() ) );
+            return new WebResponse();
         } catch( Exception e ) {
-            throw new IOException( e );
+            return new ErrorResponse(e);
         }
     }
 }

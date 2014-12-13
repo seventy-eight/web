@@ -2,6 +2,7 @@ package org.seventyeight.web.servlet;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.seventyeight.ast.Root;
@@ -16,6 +17,7 @@ import org.seventyeight.web.model.FeatureSearch;
 import org.seventyeight.web.model.ItemInstantiationException;
 import org.seventyeight.web.model.Node;
 import org.seventyeight.web.model.NotFoundException;
+import org.seventyeight.web.servlet.responses.WebResponse;
 import org.seventyeight.web.utilities.QueryParser;
 import org.seventyeight.web.utilities.QueryVisitor;
 
@@ -34,13 +36,7 @@ public class SearchHelper {
 
     private Request request;
 
-    private Response response;
-
     private Node parent;
-
-    private Response.RenderType renderType = Response.RenderType.NONE;
-
-    private String contentType = "json/app";
 
     private int defaultOffset = 0;
 
@@ -57,9 +53,8 @@ public class SearchHelper {
 
     private Core core;
 
-    public SearchHelper( Node parent, Request request, Response response ) {
+    public SearchHelper( Node parent, Request request ) {
         this.request = request;
-        this.response = response;
         this.parent = parent;
 
         this.core = request.getCore();
@@ -116,10 +111,10 @@ public class SearchHelper {
         return this;
     }
 
-    public void render() throws TemplateException, NotFoundException, ItemInstantiationException, IOException {
-        response.setRenderType( renderType );
-        response.setContentType( contentType );
-
+    public WebResponse render() throws TemplateException, NotFoundException, ItemInstantiationException, IOException {
+        //response.setRenderType( renderType );
+        //response.setContentType( contentType );
+    	
         if( documents.size() > 0 ) {
             for( MongoDocument d : documents ) {
                 logger.debug( "TYPE: {}, {}", d.get( "type", "N/A" ), d.getIdentifier() );
@@ -138,12 +133,14 @@ public class SearchHelper {
                 }
             }
 
-            PrintWriter writer = response.getWriter();
+            //PrintWriter writer = response.getWriter();
             GsonBuilder builder = new GsonBuilder();
             Gson gson = builder.create();
-            writer.write( gson.toJson( documents ) );
+            //writer.write( gson.toJson( documents ) );
+            return WebResponse.makeJsonResponse().appendBody(gson.toJson( documents ));
         } else {
-          response.getWriter().write( "{}" );
+          //response.getWriter().write( "{}" );
+        	return WebResponse.makeEmptyJsonResponse();
         }
     }
 

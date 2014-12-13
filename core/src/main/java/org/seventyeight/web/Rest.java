@@ -91,9 +91,10 @@ public class Rest extends HttpServlet {
 
         request.getStopWatch().stop( rqs.getRequestURI() );
 
+        WebResponse r = null;
         if(request.getRequestParts().length > 0 && request.getRequestParts()[0].equalsIgnoreCase("static")) {
         	try {
-				((Autonomous)core.getRoot().getChild("static")).autonomize(request, response);
+				r = ((Autonomous)core.getRoot().getChild("static")).autonomize(request);
 			} catch (Throwable e) {
 				throw new ServletException(e);
 			}
@@ -114,7 +115,7 @@ public class Rest extends HttpServlet {
 		    request.getStopWatch().stop( "Authentication" );
 		    request.getStopWatch().start( "Render page" );
 		
-		    WebResponse r = null;
+		    
 		    try {
 		        // Render the page
 		        Runner runner = core.render( request );
@@ -133,9 +134,9 @@ public class Rest extends HttpServlet {
 		        e.printStackTrace();
 		        generateException( request, rsp.getWriter(), e, e.getMessage() );
 		    }
-		    
-		    r.respond(null, response);
         }
+        
+        r.respond(request, response);
 
         sw.stop();
         logger.info( "Request response: {}", response.getResponse() );

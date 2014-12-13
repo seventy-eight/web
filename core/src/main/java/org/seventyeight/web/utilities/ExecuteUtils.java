@@ -80,19 +80,19 @@ public class ExecuteUtils {
 
         switch( context.getMethodType() ) {
         case POST:
-            return ClassUtils.getInheritedAnnotatedMethod( object.getClass(), m, PostMethod.class, context.getRequestClass(), context.getResponseClass());
+            return ClassUtils.getInheritedAnnotatedMethod( object.getClass(), m, PostMethod.class, context.getRequestClass());
 
         case GET:
-            return ClassUtils.getInheritedAnnotatedMethod( object.getClass(), m, GetMethod.class, context.getRequestClass(), context.getResponseClass());
+            return ClassUtils.getInheritedAnnotatedMethod( object.getClass(), m, GetMethod.class, context.getRequestClass());
 
         case PUT:
-            return ClassUtils.getInheritedAnnotatedMethod( object.getClass(), m, PutMethod.class, context.getRequestClass(), context.getResponseClass());
+            return ClassUtils.getInheritedAnnotatedMethod( object.getClass(), m, PutMethod.class, context.getRequestClass());
 
         case DELETE:
-            return ClassUtils.getInheritedAnnotatedMethod( object.getClass(), m, DeleteMethod.class, context.getRequestClass(), context.getResponseClass() );
+            return ClassUtils.getInheritedAnnotatedMethod( object.getClass(), m, DeleteMethod.class, context.getRequestClass());
 
         default:
-            return ClassUtils.getInheritedAnnotatedMethod( object.getClass(), m, GetMethod.class, context.getRequestClass(), context.getResponseClass() );
+            return ClassUtils.getInheritedAnnotatedMethod( object.getClass(), m, GetMethod.class, context.getRequestClass());
         }
     }
 }

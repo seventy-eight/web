@@ -13,13 +13,13 @@ import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.utils.GetMethod;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.handlers.template.TemplateException;
-import org.seventyeight.web.model.FeatureSearch;
 import org.seventyeight.web.model.ItemInstantiationException;
 import org.seventyeight.web.model.Node;
 import org.seventyeight.web.model.NotFoundException;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
 import org.seventyeight.web.servlet.SearchHelper;
+import org.seventyeight.web.servlet.responses.WebResponse;
 import org.seventyeight.web.utilities.QueryParser;
 import org.seventyeight.web.utilities.QueryVisitor;
 
@@ -58,17 +58,17 @@ public class Search implements Node {
     }
 
     @GetMethod
-    public void doSearch( Request request, Response response ) throws IOException, NotFoundException, ItemInstantiationException, TemplateException {
-        response.setRenderType( Response.RenderType.NONE );
+    public WebResponse doSearch( Request request ) throws IOException, NotFoundException, ItemInstantiationException, TemplateException {
+        //response.setRenderType( Response.RenderType.NONE );
 
-        SearchHelper sh = new SearchHelper( this, request, response );
+        SearchHelper sh = new SearchHelper( this, request );
         sh.search();
-        sh.render();
+        return sh.render();
     }
     
     @GetMethod
-    public void doGetMethods(Request request, Response response) throws IOException {
-    	response.setContentType(Response.ContentType.JSON.toString());
+    public WebResponse doGetMethods(Request request) throws IOException {
+    	//response.setContentType(Response.ContentType.JSON.toString());
         String term = request.getValue( "term", "" );
         boolean fullList = request.getValue("full", 0) > 0;
 
@@ -81,22 +81,22 @@ public class Search implements Node {
             	}
             }
 
-            PrintWriter writer = response.getWriter();
+            //PrintWriter writer = response.getWriter();
             Gson gson = new Gson();
-            writer.print( gson.toJson(methods) );
+            //writer.print( gson.toJson(methods) );
             
-            return;
+            return WebResponse.makeJsonResponse().appendBody(gson.toJson(methods));
         }
 
         if(fullList) {
-            PrintWriter writer = response.getWriter();
+            //PrintWriter writer = response.getWriter();
             Gson gson = new Gson();
-            writer.print( gson.toJson(request.getCore().getSearchables().keySet()) );
+            //writer.print( gson.toJson(request.getCore().getSearchables().keySet()) );
         	
-        	return;
+            return WebResponse.makeJsonResponse().appendBody(gson.toJson(request.getCore().getSearchables().keySet()));
     	}
         
-        response.getWriter().write( "{}" );
+        return WebResponse.makeEmptyJsonResponse();
     }
     
     private static QueryParser queryParser = new QueryParser();

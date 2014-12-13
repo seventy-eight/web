@@ -6,5 +6,7 @@ public class ErrorResponse extends WebResponse {
 	
 	public ErrorResponse(Throwable e) {
 		this.e = e;
+		this.header = e.getMessage();
+		this.code = 500;
 	}
 }

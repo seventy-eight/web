@@ -121,7 +121,7 @@ public class Collection extends Resource<Collection> implements Getable<Node> {
     }
 
     @PostMethod
-    public WebResponse doAdd( Request request) {
+    public WebResponse doAdd(Request request) {
         String id = request.getValue( "id", null );
         if( id != null ) {
             if( Resource.exists( id ) ) {
@@ -132,23 +132,24 @@ public class Collection extends Resource<Collection> implements Getable<Node> {
                 return new WebResponse();
             } else {
                 //response.setStatus( HttpServletResponse.SC_NOT_FOUND );
-            	return new WebResponse().;
+            	return new WebResponse().setCode(404);
             }
         } else {
-            response.setStatus( HttpServletResponse.SC_BAD_REQUEST );
+            //response.setStatus( HttpServletResponse.SC_BAD_REQUEST );
+        	return new WebResponse().setCode(500);
         }
     }
 
     @PostMethod
-    public void doSearch( Request request, Response response ) throws IOException, NotFoundException, ItemInstantiationException, TemplateException {
-        SearchHelper sh = new SearchHelper( this, request, response );
+    public WebResponse doSearch( Request request ) throws IOException, NotFoundException, ItemInstantiationException, TemplateException {
+        SearchHelper sh = new SearchHelper( this, request );
         sh.search();
 
         for( MongoDocument d : sh.getDocuments() ) {
             d.set( "incollection", containsId( d.getIdentifier() ) );
         }
 
-        sh.render();
+        return sh.render();
     }
 
     /*
@@ -169,10 +170,10 @@ public class Collection extends Resource<Collection> implements Getable<Node> {
     }
 
     @GetMethod
-    public void doFetch( Request request, Response response ) throws NotFoundException, ItemInstantiationException, TemplateException, IOException {
+    public WebResponse doFetch( Request request ) throws NotFoundException, ItemInstantiationException, TemplateException, IOException {
         int offset = request.getInteger( "offset", 0 );
         int number = request.getInteger( "number", 10 );
-        response.setRenderType( Response.RenderType.NONE );
+        //response.setRenderType( Response.RenderType.NONE );
 
         logger.debug( "Fetching " + number + " from " + offset + " from " + this );
 
@@ -195,10 +196,11 @@ public class Collection extends Resource<Collection> implements Getable<Node> {
             }
         }
 
-        PrintWriter writer = response.getWriter();
+        //PrintWriter writer = response.getWriter();
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();
-        writer.write( gson.toJson( result ) );
+        //writer.write( gson.toJson( result ) );
+        return WebResponse.makeJsonResponse().appendBody(gson.toJson( result ));
     }
 
     public Node getItem(int itemNumber) throws NotFoundException, ItemInstantiationException {
