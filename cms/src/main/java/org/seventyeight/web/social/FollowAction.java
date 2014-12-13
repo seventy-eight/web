@@ -106,10 +106,12 @@ public class FollowAction extends Action<FollowAction> {
     	return WebResponse.makeJsonResponse().appendBody("{\"following\":" + (isFollowing(id) ? "true" : "false") + "}");
     }
     
+    /*
     @GetMethod
     public void doFollow(Request request, Response response) {
     	
     }
+    */
 	
 	public static class FollowActionDescriptor extends ActionDescriptor<FollowAction> {
 
