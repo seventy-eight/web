@@ -48,8 +48,16 @@ public class StopWatch {
     }
 
     public void stop( String title ) {
+    	stop(title, true);
+    }
+    
+    public void stop( String title, boolean nothrow ) {
         if( !tasks.containsKey( title ) ) {
-            throw new IllegalStateException( "Task " + title + " does not exist." );
+        	if(!nothrow) {
+        		throw new IllegalStateException( "Task " + title + " does not exist." );
+        	} else {
+        		return;
+        	}
         }
 
         Task task = tasks.get( title );

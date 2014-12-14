@@ -1,5 +1,6 @@
 package org.seventyeight.web.authentication;
 
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.seventyeight.utils.Utils;
@@ -60,11 +61,12 @@ public class SimpleAuthentication implements Authentication {
         	Login login = SessionManager.getCredentials(request);
             if(login != null) {
                 logger.debug( "{}", login );
-                try {
+                //try {
                     session = login( login.getUsername(), login.getPassword());
-                } catch( Exception e ) {
+                //} catch( Exception e ) {
+                //	logger.log(Level.ERROR, "FAILED TO LOGIN", e);
                     /* Never mind, just move along... */
-                }
+                //}
             }
         } else {
 			logger.debug( "Found hash: " + hash );
@@ -96,6 +98,7 @@ public class SimpleAuthentication implements Authentication {
 	}
 
     public Session login( String username, String password ) throws AuthenticationException {
+    	logger.debug("LOGGING IN {}", username);
         if( !username.isEmpty() ) {
             User user = User.getUserByUsername( core, null, username );
 

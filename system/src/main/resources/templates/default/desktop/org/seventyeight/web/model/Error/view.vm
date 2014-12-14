@@ -1,6 +1,14 @@
-<h2>Error: $message</h2>
-<div align="left" style="">
-#foreach( $line in $stacktrace )
+#headerBlock($definition)
+
+#menuBlock($item)
+
+<div style="width:100%; text-align:center;">
+<h2>Error: $item.message</h2>
+<div style="width:800px;text-align:left;border-style:none;font-size:12px; margin-left: auto ;  margin-right: auto ;">
+#foreach( $line in $item.getStackTrace() )
     <br />$line
 #end
 </div>
+</div>
+
+#footerBlock()
