@@ -44,8 +44,12 @@
 	    </div>
 	    -->
 		
-	    <div style="width: auto;text-align: left;;height: 50px;">
-	        <a href="/"><img src="/theme/78.png"></a>
+	    <div style="width: auto;text-align: left;;height: 50px">
+	    	<div style=";float:left">
+	        	<a href="/"><img src="/theme/78.png"></a>
+	        	</div>
+	        	<div style=";float:right;margin-right:20px">#widget("Current user widget" "Logged in as" "widget10")</div>
+	        
 	    </div>
 
 	    <!--

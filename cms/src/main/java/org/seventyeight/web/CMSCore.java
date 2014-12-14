@@ -25,6 +25,7 @@ import org.seventyeight.web.social.Follow;
 import org.seventyeight.web.social.FollowAction;
 import org.seventyeight.web.social.FollowLayout;
 import org.seventyeight.web.widgets.ActivityWidget;
+import org.seventyeight.web.widgets.CurrentUser;
 import org.seventyeight.web.widgets.LastUsersWidget;
 import org.seventyeight.web.widgets.NextEventWidget;
 
@@ -105,6 +106,7 @@ public class CMSCore extends Core {
         addExtension( new WidgetListener(this) );
         addExtension( new NextEventWidget() );
         addExtension( new LastUsersWidget() );
+        addExtension(new CurrentUser());
 
         addExtension( new ActivityNodeListener() );
         addExtension( new DefaultMenuContributor() );
