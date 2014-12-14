@@ -106,10 +106,10 @@ public class WebResponse {
     }
     
     public final void respond(Request request, Response response) throws IOException {
-    	writeBody(request, response);
     	for(Cookie c : cookies) {
     		response.addCookie(c);
     	}
+    	writeBody(request, response);
     }
     
     protected void writeBody(Request request, Response response) throws IOException {

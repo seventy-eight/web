@@ -285,6 +285,7 @@ public abstract class Core implements CoreSystem {
     */
 
     public void saveNode(AbstractNode<?> node) {
+    	logger.debug("Saving {} to cache", this);
         documentCache.save( node.getDocument(), node.getIdentifier() );
     }
 

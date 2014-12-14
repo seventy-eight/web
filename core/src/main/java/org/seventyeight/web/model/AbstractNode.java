@@ -214,11 +214,13 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedN
     }
 
     public void setUpdated(Date date) {
+    	logger.debug("UPDATED IS {}", document.get("updated"));
         if(date != null) {
             document.set( "updated", date );
         } else {
             document.set( "updated", new Date() );
         }
+        logger.debug("UPDATED IS {}", document.get("updated"));
     }
 
     public void setUpdatedCall() {
