@@ -80,6 +80,11 @@ public class WebResponse {
     	return this;
     }
     
+    public WebResponse methodNotAllowed() {
+    	this.code = 405;
+    	return this;
+    }
+    
     public WebResponse notAccepted() {
     	this.code = 406;
     	return this;

@@ -21,6 +21,8 @@ import org.seventyeight.web.nodes.Conversation;
 import org.seventyeight.web.nodes.User;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
+import org.seventyeight.web.servlet.responses.RedirectResponse;
+import org.seventyeight.web.servlet.responses.WebResponse;
 import org.seventyeight.web.utilities.DocumentFinder;
 import org.seventyeight.web.utilities.JsonException;
 import org.seventyeight.web.utilities.JsonUtils;
@@ -53,9 +55,9 @@ public abstract class Resource<T extends Resource<T>> extends AbstractNode<T> im
     }
 
     @PostMethod
-    public void doSetPortrait( Request request, Response response ) throws IOException, JsonException {
+    public WebResponse doSetPortrait( Request request ) throws IOException, JsonException {
         logger.debug( "Setting portrait" );
-        response.setRenderType( Response.RenderType.NONE );
+        //response.setRenderType( Response.RenderType.NONE );
 
         JsonObject json = request.getJson();
         //List<JsonObject> objs = JsonUtils.getJsonObjects( json );
@@ -64,7 +66,8 @@ public abstract class Resource<T extends Resource<T>> extends AbstractNode<T> im
         }
 
         /* Redirect */
-        response.sendRedirect( "" );
+        //response.sendRedirect( "" );
+        return new RedirectResponse("");
     }
 
     public void setPortrait(JsonObject json) {
@@ -147,8 +150,9 @@ public abstract class Resource<T extends Resource<T>> extends AbstractNode<T> im
     }
 
     @GetMethod
-    public void doBadge( Request request, Response response ) throws TemplateException, IOException {
-        response.getWriter().write( core.getTemplateManager().getRenderer( request ).renderObject( this, "badge.vm" ) );
+    public WebResponse doBadge( Request request ) throws TemplateException, IOException {
+        //response.getWriter().write( core.getTemplateManager().getRenderer( request ).renderObject( this, "badge.vm" ) );
+    	return new WebResponse().appendBody(core.getTemplateManager().getRenderer( request ).renderObject( this, "badge.vm" ));
     }
 
     public Set<String> getConfiguredExtensionTypes() {
@@ -232,8 +236,8 @@ public abstract class Resource<T extends Resource<T>> extends AbstractNode<T> im
     */
         
     @GetMethod
-    public void doGetLatestComment(Request request, Response response) throws ItemInstantiationException, NotFoundException, TemplateException, IOException {
-        response.setRenderType( Response.RenderType.NONE );
+    public WebResponse doGetLatestComment(Request request) throws ItemInstantiationException, NotFoundException, TemplateException, IOException {
+        //response.setRenderType( Response.RenderType.NONE );
 
         //String username = request.getValue( "username", null );
         int number = request.getInteger( "number", 1 );
@@ -245,12 +249,14 @@ public abstract class Resource<T extends Resource<T>> extends AbstractNode<T> im
         List<MongoDocument> d = finder.findNext();
 
         if(!d.isEmpty()) {
-            PrintWriter writer = response.getWriter();
+            //PrintWriter writer = response.getWriter();
             GsonBuilder builder = new GsonBuilder();
             Gson gson = builder.create();
-            writer.write( gson.toJson( d.get( 0 ) ) );
+            //writer.write( gson.toJson( d.get( 0 ) ) );
+            return WebResponse.makeJsonResponse().appendBody(gson.toJson( d.get( 0 ) ));
         } else {
-            response.getWriter().write( "{}" );
+            //response.getWriter().write( "{}" );
+        	return WebResponse.makeEmptyJsonResponse();
         }
 
     }
@@ -263,8 +269,8 @@ public abstract class Resource<T extends Resource<T>> extends AbstractNode<T> im
     */
 
     @GetMethod
-    public void doGetAuthorizable(Request request, Response response) throws IOException {
-        response.setRenderType( Response.RenderType.NONE );
+    public WebResponse doGetAuthorizable(Request request) throws IOException {
+        //response.setRenderType( Response.RenderType.NONE );
 
         String term = request.getValue( "term", "" );
         int limit = request.getValue( "limit", 10 );
@@ -274,7 +280,10 @@ public abstract class Resource<T extends Resource<T>> extends AbstractNode<T> im
         if( term.length() > 1 ) {
             MongoDBQuery q = new MongoDBQuery().regex( "title", "(?i)" + term + ".*" ).in( "type", "user", "group" );
 
-            response.getWriter().print( MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).find( q, 0, limit ) );
+            //response.getWriter().print( MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).find( q, 0, limit ) );
+            return WebResponse.makeJsonResponse().appendBody(MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).find( q, 0, limit ));
+        } else {
+        	return WebResponse.makeEmptyJsonResponse();
         }
     }
 
@@ -295,15 +304,17 @@ public abstract class Resource<T extends Resource<T>> extends AbstractNode<T> im
     }
 
     @PostMethod
-    public void doDelete(Request request, Response response) throws IOException {
-        response.setRenderType( Response.RenderType.NONE );
+    public WebResponse doDelete(Request request) throws IOException {
+        //response.setRenderType( Response.RenderType.NONE );
 
         logger.debug( "Deleting {}", this );
 
         if(parent != null && parent instanceof DeletingParent) {
             ( (DeletingParent) parent ).deleteChild( this );
+            return new WebResponse();
         } else {
-            response.sendError( HttpServletResponse.SC_BAD_REQUEST, "Whoops" );
+            //response.sendError( HttpServletResponse.SC_BAD_REQUEST, "Whoops" );
+        	return new WebResponse().badRequest().setHeader("Failed to delete");
         }
     }
 }

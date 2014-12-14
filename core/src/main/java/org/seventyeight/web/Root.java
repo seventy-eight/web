@@ -14,6 +14,8 @@ import org.seventyeight.web.handlers.template.TemplateManager;
 import org.seventyeight.web.model.*;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
+import org.seventyeight.web.servlet.responses.RedirectResponse;
+import org.seventyeight.web.servlet.responses.WebResponse;
 
 import javax.servlet.http.Cookie;
 
@@ -99,7 +101,7 @@ public class Root implements TopLevelNode, RootNode, Parent {
 
 
     @PostMethod
-    public void doLogin( Request request, Response response ) throws AuthenticationException, IOException {
+    public WebResponse doLogin( Request request ) throws AuthenticationException, IOException {
 
         String username = request.getValue( Authentication.NAME_KEY );
         String password = request.getValue( Authentication.PASS_KEY );
@@ -113,21 +115,25 @@ public class Root implements TopLevelNode, RootNode, Parent {
 
         Cookie c = new Cookie( Authentication.SESSION_NAME, session.getIdentifier() );
         c.setMaxAge( session.getTimeToLive() );
-        response.addCookie( c );
+        //response.addCookie( c );
 
-        response.sendRedirect( request.getValue( "url", "/" ) );
+        //response.sendRedirect( request.getValue( "url", "/" ) );
+        return new RedirectResponse(request.getValue( "url", "/" )).addCookie(c);
     }
 
     @GetMethod
-    public void doLogout( Request request, Response response ) throws IOException {
+    public WebResponse doLogout( Request request ) throws IOException {
         logger.debug( "Logging out" );
         Core core = request.getCore();
+        
+        WebResponse r = new RedirectResponse("/");
 
         for( Cookie cookie : request.getCookies() ) {
             logger.debug( "Cookie: " + cookie.getName() + "=" + cookie.getValue() );
             if( cookie.getName().equals( Authentication.SESSION_NAME ) ) {
                 cookie.setMaxAge( 0 );
-                response.addCookie( cookie );
+                //response.addCookie( cookie );
+                r.addCookie(cookie);
 
                 /* Remove the session object */
                 core.getSessionManager().removeSession( cookie.getValue() );
@@ -136,7 +142,8 @@ public class Root implements TopLevelNode, RootNode, Parent {
             }
         }
 
-        response.sendRedirect( "/" );
+        //response.sendRedirect( "/" );
+        return r;
     }
 
     @Override

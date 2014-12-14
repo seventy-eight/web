@@ -353,7 +353,7 @@ public class User extends Resource<User> implements Authorizable {
         */
 
         @Override
-        public void save( Request request, Response response ) {
+        public void save( Request request ) {
             logger.debug( "Saving " + this );
 
             testString = "The millis: " + System.currentTimeMillis();
