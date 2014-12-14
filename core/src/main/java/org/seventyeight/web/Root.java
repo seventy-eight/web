@@ -110,6 +110,11 @@ public class Root implements TopLevelNode, RootNode, Parent {
         Core core = request.getCore();
 
         Session session = core.getAuthentication().login( username, password );
+        
+        logger.debug("SESSION: {}", session);
+        if(session == null) {
+        	return new WebResponse().notFound().setHeader("User not found or password failed");
+        }
 
         session.save();
 

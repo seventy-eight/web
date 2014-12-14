@@ -1,1 +1,20 @@
-$item.getUser($request)
+ 
+#if($request.isAuthenticated())
+<table>
+	<tr>
+		<td rowspan="2">
+			<img src="$request.getUser().getPortrait()" style="height:50px">
+		</td>
+		<td>
+			$request.getUser()
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<a href="/logout">Log out</a>
+		</td>
+	</tr>
+</table>
+#else
+<a href="/login">Log in</a>
+#end
