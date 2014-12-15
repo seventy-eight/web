@@ -289,7 +289,8 @@ public abstract class Resource<T extends Resource<T>> extends AbstractNode<T> im
 
     @Override
     public ACL getACL() {
-        MongoDocument doc = document.get( fullAclField );
+        //MongoDocument doc = ((MongoDocument)document.get( EXTENSIONS )).get;
+    	MongoDocument doc = document.getr2(EXTENSIONS, aclField);
 
         //
         if( doc == null || doc.isNull() ) {
