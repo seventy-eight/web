@@ -2,13 +2,22 @@
 
 #menuBlock($item)
 
-<div style="width:100%; text-align:center;">
-<h2>Error: $item.message</h2>
 <div style="width:800px;text-align:left;border-style:none;font-size:12px; margin-left: auto ;  margin-right: auto ;">
-#foreach( $line in $item.getStackTrace() )
-    <br />$line
-#end
-</div>
+<h2>Error: $item.message</h2>
+	<div style="font-size: 14px; background-color: #89a89a; text-align: center" onclick="$('#trace').toggle(250)">
+	    Guru meditation
+	</div>
+	
+    <div id="trace" style="display: none; border-collapse: collapse">
+		<div style="">
+			#foreach( $line in $item.getStackTrace() )
+    		<br />$line
+			#end
+		</div>
+    </div>
+
+
+
 </div>
 
 #footerBlock()
