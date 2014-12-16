@@ -17,6 +17,7 @@ import org.seventyeight.web.model.*;
 import org.seventyeight.web.nodes.User;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
+import org.seventyeight.web.servlet.responses.WebResponse;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -59,9 +60,9 @@ public class ResourcesAction implements Node, DeletingParent {
     }
 
     @PostMethod
-    public void doSearch( Request request, Response response ) throws IOException, NotFoundException, ItemInstantiationException, TemplateException {
-        response.setRenderType( Response.RenderType.NONE );
-        response.setContentType( "json/app" );
+    public WebResponse doSearch( Request request ) throws IOException, NotFoundException, ItemInstantiationException, TemplateException {
+        //response.setRenderType( Response.RenderType.NONE );
+        //response.setContentType( "json/app" );
 
         int offset = request.getInteger( "offset", 0 );
         int number = request.getInteger( "number", 10 );
@@ -97,20 +98,22 @@ public class ResourcesAction implements Node, DeletingParent {
 
             logger.debug( "SIZE: " + docs.size() );
 
-            PrintWriter writer = response.getWriter();
+            ///PrintWriter writer = response.getWriter();
             GsonBuilder builder = new GsonBuilder();
             Gson gson = builder.create();
-            writer.write( gson.toJson( docs ) );
+            //writer.write( gson.toJson( docs ) );
+            return WebResponse.makeJsonResponse().appendBody(gson.toJson( docs ));
         } else {
-            response.getWriter().write( "{}" );
+            //response.getWriter().write( "{}" );
+        	return WebResponse.makeEmptyJsonResponse();
         }
     }
 
 
     @GetMethod
-    public void doList( Request request, Response response ) throws IOException {
-        response.setRenderType( Response.RenderType.NONE );
-        response.setContentType( "json/app" );
+    public WebResponse doList( Request request ) throws IOException {
+        //response.setRenderType( Response.RenderType.NONE );
+        //response.setContentType( "json/app" );
 
         int offset = request.getInteger( "offset", 0 );
         int number = request.getInteger( "number", 10 );
@@ -131,12 +134,14 @@ public class ResourcesAction implements Node, DeletingParent {
         List<MongoDocument> docs = MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).find( query, offset, number );
 
         if( docs.size() > 0 ) {
-            PrintWriter writer = response.getWriter();
+            //PrintWriter writer = response.getWriter();
             GsonBuilder builder = new GsonBuilder();
             Gson gson = builder.create();
-            writer.write( gson.toJson( docs ) );
+            //writer.write( gson.toJson( docs ) );
+            return WebResponse.makeJsonResponse().appendBody(gson.toJson( docs ));
         } else {
-            response.getWriter().write( "{}" );
+            //response.getWriter().write( "{}" );
+        	return WebResponse.makeEmptyJsonResponse();
         }
     }
 

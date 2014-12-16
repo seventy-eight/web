@@ -11,6 +11,8 @@ import org.seventyeight.web.Core;
 import org.seventyeight.web.CoreException;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
+import org.seventyeight.web.servlet.responses.RedirectResponse;
+import org.seventyeight.web.servlet.responses.WebResponse;
 
 import java.io.IOException;
 
@@ -55,8 +57,8 @@ public abstract class Configurable {
     }
 
     @GetMethod
-    public void doSubmit( Request request, Response response ) throws IOException {
-        save( request, response );
+    public WebResponse doSubmit( Request request ) throws IOException {
+        save( request );
         MongoDocument doc = getConfigurationDocument();
         try {
             SimpleORM.storeFromObject( this, doc );
@@ -68,7 +70,8 @@ public abstract class Configurable {
         MongoDBCollection.get( Core.DESCRIPTOR_COLLECTION_NAME ).save( doc );
 
         /* TODO get a better URL */
-        response.sendRedirect( "/" );
+        //response.sendRedirect( "/" );
+        return new RedirectResponse("/");
     }
 
 
@@ -77,7 +80,7 @@ public abstract class Configurable {
      * @param request
      * @param response
      */
-    public void save( Request request, Response response ) {
+    public void save( Request request ) {
         logger.debug( "Saving " + getClass() );
     }
 }

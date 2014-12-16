@@ -16,6 +16,7 @@ import org.seventyeight.web.Core;
 import org.seventyeight.web.model.*;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
+import org.seventyeight.web.servlet.responses.WebResponse;
 
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletResponse;
@@ -100,22 +101,24 @@ public class Concert extends Resource<Concert> implements Event, Getable<Artist>
     }
 
     @PostMethod
-    public void doIndex(Request request, Response response) throws IOException {
-        response.setRenderType( Response.RenderType.NONE );
+    public WebResponse doIndex(Request request) throws IOException {
+        //response.setRenderType( Response.RenderType.NONE );
 
         String artist = request.getValue( "resource", null );
         logger.debug( "Adding {} to {}", artist, this );
 
         if(hasArtist( artist )) {
-            response.sendError( HttpServletResponse.SC_CONFLICT, "The artist with id " + artist + ", is already added" );
-            return;
+            //response.sendError( HttpServletResponse.SC_CONFLICT, "The artist with id " + artist + ", is already added" );
+            return new WebResponse().conflict().setHeader("The artist with id " + artist + ", is already added");
         }
 
         if(artist != null) {
             document.addToList( "artists", artist );
             save();
+            return new WebResponse();
         } else {
-            throw new IllegalArgumentException( "No artist provided" );
+            //throw new IllegalArgumentException( "No artist provided" );
+        	return new WebResponse().badRequest().setHeader("No artist provided");
         }
     }
 
@@ -146,8 +149,8 @@ public class Concert extends Resource<Concert> implements Event, Getable<Artist>
 		}
 
         @GetMethod
-        public void doGetConcerts(Request request, Response response) throws IOException {
-            response.setRenderType( Response.RenderType.NONE );
+        public WebResponse doGetConcerts(Request request) throws IOException {
+            //response.setRenderType( Response.RenderType.NONE );
 
             String term = request.getValue( "term", "" );
             String venueTerm = request.getValue( "venue", null );
@@ -169,10 +172,11 @@ public class Concert extends Resource<Concert> implements Event, Getable<Artist>
                 query.or( true, queries );
                 logger.debug( "QUERY IS {}", query );
 
-                PrintWriter writer = response.getWriter();
-                writer.print( MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).find( query, 0, 10 ) );
+                //PrintWriter writer = response.getWriter();
+                //writer.print( MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).find( query, 0, 10 ) );
+                return WebResponse.makeJsonResponse().appendBody(MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).find( query, 0, 10 ));
             } else {
-                response.getWriter().write( "{}" );
+                return WebResponse.makeEmptyJsonResponse();
             }
         }
 

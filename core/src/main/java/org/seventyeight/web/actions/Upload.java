@@ -24,6 +24,8 @@ import org.seventyeight.web.nodes.FileResource;
 import org.seventyeight.web.nodes.ImageUploadsWrapper;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
+import org.seventyeight.web.servlet.responses.ErrorResponse;
+import org.seventyeight.web.servlet.responses.WebResponse;
 import org.seventyeight.web.utilities.UploadHandler;
 
 import java.io.File;
@@ -89,9 +91,9 @@ public class Upload implements Node {
     }
 
     @PostMethod
-    public void doUpload( Request request, Response response ) throws IOException, SavingException, ItemInstantiationException, ClassNotFoundException {
+    public WebResponse doUpload( Request request ) throws IOException, SavingException, ItemInstantiationException, ClassNotFoundException {
         //AsyncContext aCtx = request.startAsync( request, response );
-        response.setRenderType( Response.RenderType.NONE );
+        //response.setRenderType( Response.RenderType.NONE );
 
         /* Somehow get the right uploadable descriptor */
         List<Descriptor> descriptors = core.getExtensionDescriptors( Uploadable.class );
@@ -110,7 +112,7 @@ public class Upload implements Node {
             items = UploadHandler.commonsUploader.getItems( request );
         } catch( FileUploadException e ) {
             logger.error( e.getMessage() );
-            return;
+            return new ErrorResponse(e);
         }
         
         //JsonObject json = request.getJson(true);
@@ -151,7 +153,7 @@ public class Upload implements Node {
                         logger.debug("THE JSON: {}", json.toString());
 
                         FileResource.FileDescriptor d = core.getDescriptor( FileResource.class );
-                        fr = d.newInstance( core, core.getRoot(), json );
+                        fr = d.newInstance( core, core.getRoot(), json, request.getUser().getIdentifier() );
                         fr.updateConfiguration(json);
 
                         fr.setPath( uf.relativePath );
@@ -200,16 +202,18 @@ public class Upload implements Node {
 
         logger.debug( "Executed!" );
 
-        PrintWriter writer = response.getWriter();
+        //PrintWriter writer = response.getWriter();
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();
-        writer.write( gson.toJson( new UploadResponses(Collections.singletonList(r) ) ));
+        //writer.write( gson.toJson( new UploadResponses(Collections.singletonList(r) ) ));
+        return WebResponse.makeJsonResponse().appendBody(gson.toJson( new UploadResponses(Collections.singletonList(r) ) ));
     }
 
     @GetMethod
-    public void doUploadForm(Request request, Response response) throws IOException, TemplateException, NotFoundException {
-        response.setRenderType( Response.RenderType.NONE );
-        response.getWriter().write( core.getTemplateManager().getRenderer( request ).renderClass( Upload.class, "index.vm" ) );
+    public WebResponse doUploadForm(Request request) throws IOException, TemplateException, NotFoundException {
+        //response.setRenderType( Response.RenderType.NONE );
+        //response.getWriter().write( core.getTemplateManager().getRenderer( request ).renderClass( Upload.class, "index.vm" ) );
+    	return new WebResponse().appendBody(core.getTemplateManager().getRenderer( request ).renderClass( Upload.class, "index.vm" ));
     }
     
     public static class UploadResponses {

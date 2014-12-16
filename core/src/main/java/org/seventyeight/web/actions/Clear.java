@@ -11,6 +11,7 @@ import org.seventyeight.web.model.Comment;
 import org.seventyeight.web.model.Node;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
+import org.seventyeight.web.servlet.responses.WebResponse;
 
 public class Clear implements Node, AccessControlled {
 
@@ -27,13 +28,15 @@ public class Clear implements Node, AccessControlled {
 	}
 	
 	@DeleteMethod
-	public void doIndex(Request request, Response response) {
+	public WebResponse doIndex(Request request) {
 		logger.warn("Truncating databases");
 		
 		MongoDBCollection.get(Core.NODES_COLLECTION_NAME).truncate();
 		MongoDBCollection.get(Core.NUMBERS_COLLECTION).truncate();
 		MongoDBCollection.get(Core.DESCRIPTOR_COLLECTION_NAME).truncate();
 		MongoDBCollection.get(Comment.COMMENTS_COLLECTION).truncate();
+		
+		return new WebResponse();
 	}
 
 	@Override

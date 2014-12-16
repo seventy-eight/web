@@ -7,6 +7,8 @@ import org.seventyeight.web.Core;
 import org.seventyeight.web.model.*;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
+import org.seventyeight.web.servlet.responses.RedirectResponse;
+import org.seventyeight.web.servlet.responses.WebResponse;
 
 import java.io.IOException;
 
@@ -37,7 +39,7 @@ public class NewContent implements Node {
     }
 
     @PostMethod
-    public void doCreate( Request request, Response response ) throws IOException {
+    public WebResponse doCreate( Request request ) throws IOException {
         String className = request.getValue( "className" );
 
         if( className == null ) {
@@ -72,8 +74,9 @@ public class NewContent implements Node {
         r.setOwner( request.getUser() );
         r.save();
 
-        response.sendRedirect( r.getUrl() + "configure" );
+        //response.sendRedirect( r.getUrl() + "configure" );
         //ResourceUtils.getConfigureResourceView( request, response, r, descriptor );
+        return new RedirectResponse(r.getUrl() + "configure");
     }
 
     @Override

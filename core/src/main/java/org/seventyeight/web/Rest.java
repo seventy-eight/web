@@ -10,6 +10,8 @@ import org.seventyeight.web.model.Autonomous;
 import org.seventyeight.web.model.Runner;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
+import org.seventyeight.web.servlet.responses.ErrorResponse;
+import org.seventyeight.web.servlet.responses.WebResponse;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -90,9 +92,10 @@ public class Rest extends HttpServlet {
 
         request.getStopWatch().stop( rqs.getRequestURI() );
 
+        WebResponse r = null;
         if(request.getRequestParts().length > 0 && request.getRequestParts()[0].equalsIgnoreCase("static")) {
         	try {
-				((Autonomous)core.getRoot().getChild("static")).autonomize(request, response);
+				r = ((Autonomous)core.getRoot().getChild("static")).autonomize(request);
 			} catch (Throwable e) {
 				throw new ServletException(e);
 			}
@@ -100,38 +103,40 @@ public class Rest extends HttpServlet {
             request.getStopWatch().start( "Authentication" );
 
             logger.debug( "THE USER: {}", request.getUser() );
+
+            logger.debug( "AUTHENTICATING" );
             try {
-                logger.debug( "AUTHENTICATING" );
-                core.getAuthentication().authenticate( request, response );
-            } catch( AuthenticationException e ) {
-                logger.warn( "Unable to authenticate", e );
-            }
+	            core.getAuthentication().authenticate( request, response );
+			
+			    logger.debug( "THE USER: {}", request.getUser() );
+			    request.getStopWatch().stop( "Getting user", true );
+			
+			    request.getStopWatch().stop( "Authentication" );
+			    request.getStopWatch().start( "Render page" );
 		
-		    logger.debug( "THE USER: {}", request.getUser() );
-		    request.getStopWatch().stop( "Getting user" );
-		
-		    request.getStopWatch().stop( "Authentication" );
-		    request.getStopWatch().start( "Render page" );
-		
-		    try {
 		        // Render the page
 		        Runner runner = core.render( request );
 		        runner.injectContext(request);
-		        runner.run(response);
+		        r = runner.run();
 		        request.getUser().setSeen();
 		    } catch( CoreException e ) {
 		        e.printStackTrace();
+		        /*
 		        if( response.isRenderingMain() ) {
 		            response.renderError( request, e );
 		        } else {
 		            response.sendError( e.getCode(), e.getMessage() );
 		        }
+		        */
+		        r = new ErrorResponse(e).badRequest();
 		    } catch( Throwable e ) {
 		        logger.error( "CAUGHT ERROR" );
 		        e.printStackTrace();
 		        generateException( request, rsp.getWriter(), e, e.getMessage() );
 		    }
         }
+        
+        r.respond(request, response);
 
         sw.stop();
         logger.info( "Request response: {}", response.getResponse() );

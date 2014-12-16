@@ -17,6 +17,8 @@ import org.seventyeight.web.authorization.Authorizable;
 import org.seventyeight.web.model.*;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
+import org.seventyeight.web.servlet.responses.JsonResponse;
+import org.seventyeight.web.servlet.responses.WebResponse;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -316,23 +318,25 @@ public class User extends Resource<User> implements Authorizable {
 		}
 
 		@GetMethod
-        public void doGetUsers(Request request, Response response) throws IOException {
+        public WebResponse doGetUsers(Request request) throws IOException {
             String term = request.getValue( "term", "" );
             boolean exact = request.getBoolean("exact", false);
 
             if( term.length() > 1 ) {
                 MongoDBQuery query = new MongoDBQuery().is( "type", "user" ).regex( "title", "(?i)" + term + (exact ? "" : ".*") );
 
-                PrintWriter writer = response.getWriter();
-                writer.print( MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).find( query, 0, 10 ) );
+                //PrintWriter writer = response.getWriter();
+                //writer.print( MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).find( query, 0, 10 ) );
+                return new JsonResponse(MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).find( query, 0, 10 ));
             } else {
-                response.getWriter().write( "{}" );
+                //response.getWriter().write( "{}" );
+            	return JsonResponse.empty();
             }
         }
 		
 		@GetMethod
 		@API
-		public void doFind(Request request, Response response) {
+		public void doFind(Request request) {
 			JsonObject json = request.getJson();
 			json.get("");
 		}
@@ -349,7 +353,7 @@ public class User extends Resource<User> implements Authorizable {
         */
 
         @Override
-        public void save( Request request, Response response ) {
+        public void save( Request request ) {
             logger.debug( "Saving " + this );
 
             testString = "The millis: " + System.currentTimeMillis();

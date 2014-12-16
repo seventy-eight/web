@@ -1,6 +1,7 @@
 package org.seventyeight.web.actions;
 
 import com.google.gson.JsonObject;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.logging.log4j.LogManager;
@@ -13,6 +14,8 @@ import org.seventyeight.web.model.Action;
 import org.seventyeight.web.model.Node;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
+import org.seventyeight.web.servlet.responses.RedirectResponse;
+import org.seventyeight.web.servlet.responses.WebResponse;
 import org.seventyeight.web.utilities.JsonException;
 import org.seventyeight.web.utilities.JsonUtils;
 import org.seventyeight.web.utilities.ServletUtils;
@@ -45,7 +48,7 @@ public abstract class AbstractUploadAction<T extends AbstractUploadAction<T>> ex
     public abstract ACL.Permission getUploadPermission();
 
     @PostMethod
-    public void doUpload( Request request, Response response ) throws Exception {
+    public WebResponse doUpload( Request request ) throws Exception {
         request.checkPermissions( getParent(), getUploadPermission() );
         logger.debug( "Uploading file" );
 
@@ -76,10 +79,12 @@ public abstract class AbstractUploadAction<T extends AbstractUploadAction<T>> ex
             //Core.superSave( this );
 
         } else {
-            throw new IllegalStateException( "No file uploaded" );
+            //throw new IllegalStateException( "No file uploaded" );
+        	return new WebResponse().badRequest().setHeader("No file uploaded");
         }
 
-        response.sendRedirect( "" );
+        //response.sendRedirect( "" );
+        return new RedirectResponse("");
     }
 
     public void setFile( String file ) {

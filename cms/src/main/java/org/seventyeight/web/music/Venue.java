@@ -11,12 +11,14 @@ import org.seventyeight.database.mongodb.MongoDBCollection;
 import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.utils.GetMethod;
+import org.seventyeight.utils.PostMethod;
 import org.seventyeight.web.Core;
 import org.seventyeight.web.authorization.ACL;
 import org.seventyeight.web.extensions.MenuContributor;
 import org.seventyeight.web.model.*;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
+import org.seventyeight.web.servlet.responses.WebResponse;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -72,18 +74,20 @@ public class Venue extends Resource<Venue> {
     }
 
     @GetMethod
-    public void doGetStage(Request request, Response response) throws IOException {
-        response.setRenderType( Response.RenderType.NONE );
+    public WebResponse doGetStage(Request request) throws IOException {
+        //response.setRenderType( Response.RenderType.NONE );
 
         String term = request.getValue( "term", "" );
 
         if( term.length() > 1 ) {
-            PrintWriter writer = response.getWriter();
+            //PrintWriter writer = response.getWriter();
             GsonBuilder builder = new GsonBuilder();
             Gson gson = builder.create();
-            writer.write( gson.toJson( getStageMatching( term ) ) );
+            //writer.write( gson.toJson( getStageMatching( term ) ) );
+            return WebResponse.makeJsonResponse().appendBody(gson.toJson( getStageMatching( term ) ));
         } else {
-            response.getWriter().write( "{}" );
+            //response.getWriter().write( "{}" );
+        	return WebResponse.makeEmptyJsonResponse();
         }
     }
 
@@ -100,16 +104,18 @@ public class Venue extends Resource<Venue> {
         return r;
     }
 
-    @GetMethod
-    public void doAddConcert(Request request, Response response) throws ItemInstantiationException, IOException {
-        response.setRenderType( Response.RenderType.NONE );
+    @PostMethod
+    public WebResponse doIndex(Request request) throws ItemInstantiationException, IOException {
+        //response.setRenderType( Response.RenderType.NONE );
 
         Concert.ConcertDescriptor descriptor = core.getDescriptor( Concert.class );
         Concert instance = descriptor.newInstance( request, this );
         instance.setVenue( this );
         instance.save();
 
-        response.sendRedirect( instance.getConfigUrl() );
+        //response.sendRedirect( instance.getConfigUrl() );
+        
+        return new WebResponse().appendBody(instance.getConfigUrl());
     }
 
     public static class VenueDescriptor extends ResourceDescriptor<Venue> implements MenuContributor {
@@ -136,18 +142,20 @@ public class Venue extends Resource<Venue> {
         }
 
         @GetMethod
-        public void doGetVenues(Request request, Response response) throws IOException {
-            response.setRenderType( Response.RenderType.NONE );
+        public WebResponse doGetVenues(Request request) throws IOException {
+            //response.setRenderType( Response.RenderType.NONE );
 
             String term = request.getValue( "term", "" );
 
             if( term.length() > 1 ) {
                 MongoDBQuery query = new MongoDBQuery().is( "type", "venue" ).regex( "title", "(?i)" + term + ".*" );
                 
-                PrintWriter writer = response.getWriter();
-                writer.print( MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).find( query, 0, 10 ) );
+                //PrintWriter writer = response.getWriter();
+                //writer.print( MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).find( query, 0, 10 ) );
+                return WebResponse.makeJsonResponse().appendBody(MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).find( query, 0, 10 ));
             } else {
-                response.getWriter().write( "{}" );
+                //response.getWriter().write( "{}" );
+                return WebResponse.makeEmptyJsonResponse();
             }
         }
 

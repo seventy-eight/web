@@ -9,6 +9,7 @@ import org.seventyeight.web.model.Node;
 import org.seventyeight.web.model.SearchAction;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
+import org.seventyeight.web.servlet.responses.WebResponse;
 
 import java.io.IOException;
 import java.util.List;
@@ -38,13 +39,16 @@ public class NodeSearch extends SearchAction {
     */
 
     @GetMethod
-    public void doIndex( Request request, Response response ) throws IOException {
+    public WebResponse doIndex( Request request ) throws IOException {
         String type = request.getValue( "type", null );
         String term = request.getValue( "term", "" );
         int limit = Integer.parseInt( request.getValue( "limit", "10" ) );
 
         if( term.length() > 2 ) {
-            response.getWriter().print( getDocumentsWithStartingTitle( term, type, limit ) );
+            //response.getWriter().print( getDocumentsWithStartingTitle( term, type, limit ) );
+        	return WebResponse.makeJsonResponse().appendBody(getDocumentsWithStartingTitle( term, type, limit ));
+        } else {
+        	return WebResponse.makeEmptyJsonResponse();
         }
     }
 

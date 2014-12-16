@@ -32,6 +32,7 @@ import org.seventyeight.web.model.ResourceDescriptor;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
 import org.seventyeight.web.servlet.Response.RenderType;
+import org.seventyeight.web.servlet.responses.WebResponse;
 import org.seventyeight.web.utilities.JsonException;
 
 import com.google.gson.Gson;
@@ -83,16 +84,18 @@ public class Conversation extends Resource<Conversation> {
         return new Comment( core, this, doc );
 	}
 
+	/*
 	@GetMethod
 	public void doGetLatestComments(Request request, Response response) {
 		JsonObject json = request.getJson();
 		
 		//int offset = json.get("offset");
 	}
+	*/
 	
     @GetMethod
-    public void doGetComments(Request request, Response response) throws IOException, TemplateException {
-        response.setRenderType( Response.RenderType.NONE );
+    public WebResponse doGetComments(Request request) throws IOException, TemplateException {
+        //response.setRenderType( Response.RenderType.NONE );
 
         // A map of lists of comments, keyed by the comments parent id
         Map<String, List<MongoDocument>> comments = new HashMap<String, List<MongoDocument>>();
@@ -162,21 +165,23 @@ public class Conversation extends Resource<Conversation> {
         	logger.debug("NO DESCENDANTS!!!");
         }
         
-        PrintWriter writer = response.getWriter();
+        //PrintWriter writer = response.getWriter();
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();
-        writer.write( gson.toJson( comments ) );
+        //writer.write( gson.toJson( comments ) );
+        return new WebResponse().appendBody(gson.toJson( comments ));
         //writer.write( comments.toString() );
     }
     
     @GetMethod
-    public void doGetNumberOfFirstLevelComments(Request request, Response response) throws IOException {
-    	response.setRenderType(RenderType.NONE);
+    public WebResponse doGetNumberOfFirstLevelComments(Request request) throws IOException {
+    	//response.setRenderType(RenderType.NONE);
     	
         MongoDBQuery query = new MongoDBQuery().is( "conversation", getIdentifier() ).is("parent", getRootComment().getIdentifier());
         //logger.debug("QUERY: {}", query);
         MongoDocument sort = new MongoDocument().set( "created", 1 );
-        response.getWriter().print(MongoDBCollection.get( Comment.COMMENTS_COLLECTION ).count(query));
+        //response.getWriter().print(MongoDBCollection.get( Comment.COMMENTS_COLLECTION ).count(query));
+        return new WebResponse().appendBody(MongoDBCollection.get( Comment.COMMENTS_COLLECTION ).count(query));
     }
     
     
@@ -246,19 +251,19 @@ public class Conversation extends Resource<Conversation> {
     }
 
 	@PostMethod
-	public void doIndex(Request request, Response response) throws IOException, ClassNotFoundException, ItemInstantiationException, TemplateException {
+	public WebResponse doIndex(Request request) throws IOException, ClassNotFoundException, ItemInstantiationException, TemplateException {
     	JsonObject json = request.getJson();
         
         if(json == null) {
-        	response.setStatus(Response.SC_NOT_ACCEPTABLE);
-        	response.getWriter().print("No data provided");
-        	return;
+        	//response.setStatus(Response.SC_NOT_ACCEPTABLE);
+        	//response.getWriter().print("No data provided");
+        	return new WebResponse().setCode(406).setHeader("No data provided");
         }
         
         if(!json.has("comment") || json.get("comment").getAsString().length() < 0) {
-        	response.setStatus(Response.SC_NOT_ACCEPTABLE);
-        	response.getWriter().print("No comment provided");
-        	return;
+        	//response.setStatus(Response.SC_NOT_ACCEPTABLE);
+        	//response.getWriter().print("No comment provided");
+        	return new WebResponse().setCode(406).setHeader("No comment provided");
         }
 
     	Comment comment = addComment(request);
@@ -269,10 +274,11 @@ public class Conversation extends Resource<Conversation> {
         comment.getDocument().set( "view", core.getTemplateManager().getRenderer( request ).renderObject( comment, "view.vm" ) );
 
         comment.getDocument().set("identifier", comment.getIdentifier());
-        PrintWriter writer = response.getWriter();
-        writer.write( comment.getDocument().toString() );
+        //PrintWriter writer = response.getWriter();
+        //writer.write( comment.getDocument().toString() );
         
-    	response.setStatus(Response.SC_ACCEPTED);
+    	//response.setStatus(Response.SC_ACCEPTED);
+        return new WebResponse().appendBody(comment.getDocument().toString());
     	//response.getWriter().print("{\"id\":\"" + getIdentifier() + "\"}");
 	}
 

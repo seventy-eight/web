@@ -28,6 +28,7 @@ import org.seventyeight.web.nodes.Conversation;
 import org.seventyeight.web.nodes.Group;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
+import org.seventyeight.web.servlet.responses.WebResponse;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -92,8 +93,8 @@ public class Conversations extends Action<Conversations> implements Getable<Conv
     }
 	
     @PostMethod
-    public void doAdd(Request request, Response response) throws ItemInstantiationException, ClassNotFoundException, TemplateException, IOException {
-    	response.setRenderType( Response.RenderType.NONE );
+    public WebResponse doAdd(Request request) throws ItemInstantiationException, ClassNotFoundException, TemplateException, IOException {
+    	//response.setRenderType( Response.RenderType.NONE );
     	
     	logger.debug("Adding conversation to {}", this);
     	
@@ -122,20 +123,23 @@ public class Conversations extends Action<Conversations> implements Getable<Conv
 
                 conversation.getDocument().set("view", core.getTemplateManager().getRenderer( request ).renderObject( conversation, "view.vm" ));
                 
-                PrintWriter writer = response.getWriter();
+                //PrintWriter writer = response.getWriter();
                 GsonBuilder builder = new GsonBuilder();
                 Gson gson = builder.create();
-                writer.write( gson.toJson( conversation.getDocument() ) );
+                //writer.write( gson.toJson( conversation.getDocument() ) );
                 //writer.write( core.getTemplateManager().getRenderer( request ).renderObject( conversation, "view.vm" ) );
+                return new WebResponse().appendBody(gson.toJson( conversation.getDocument() ));
             }
+            return new WebResponse().serverError().setHeader("Conversation not created");
         } else {
-            throw new IllegalStateException( "No text provided!" );
+            //throw new IllegalStateException( "No text provided!" );
+        	return new WebResponse().badRequest().setHeader("No Text provided");
         }
     }
 
     @GetMethod
-    public void doGetAll(Request request, Response response) throws IOException, TemplateException {
-        response.setRenderType( Response.RenderType.NONE );
+    public WebResponse doGetAll(Request request) throws IOException, TemplateException {
+        //response.setRenderType( Response.RenderType.NONE );
 
         int number = request.getInteger( "number", 10 );
         int offset = request.getInteger( "offset", 0 );
@@ -150,10 +154,11 @@ public class Conversations extends Action<Conversations> implements Getable<Conv
         logger.fatal("--->{}", query);
         List<MongoDocument> docs = MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).find( query, offset, number, sort );
         logger.fatal("RES:{}", docs);
-        PrintWriter writer = response.getWriter();
+        //PrintWriter writer = response.getWriter();
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();
-        writer.write( gson.toJson( docs ) );
+        //writer.write( gson.toJson( docs ) );
+        return WebResponse.makeJsonResponse().appendBody(gson.toJson( docs ));
     }
 
 	public static class ConversationsDescriptor extends Action.ActionDescriptor<Conversations> {

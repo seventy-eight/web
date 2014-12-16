@@ -7,6 +7,7 @@ import org.seventyeight.web.Core;
 import org.seventyeight.web.model.*;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
+import org.seventyeight.web.servlet.responses.WebResponse;
 
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -48,10 +49,10 @@ public class WidgetAction implements Node, Parent {
     }
 
     @GetMethod
-    public void doGet(Request request, Response response) {
-        response.setRenderType( Response.RenderType.NONE );
+    public WebResponse doGet(Request request) {
+        //response.setRenderType( Response.RenderType.NONE );
 
-
+    	return new WebResponse();
     }
 
     public Widget get( String token ) throws NotFoundException {

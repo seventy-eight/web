@@ -7,7 +7,8 @@ import org.seventyeight.web.model.CallContext;
 import org.seventyeight.web.model.Runner;
 import org.seventyeight.web.model.RunnerException;
 import org.seventyeight.web.servlet.Request;
-import org.seventyeight.web.servlet.Response;
+import org.seventyeight.web.servlet.responses.ErrorResponse;
+import org.seventyeight.web.servlet.responses.WebResponse;
 
 public class MethodRunner implements Runner {
 
@@ -22,13 +23,13 @@ public class MethodRunner implements Runner {
 	}
 	
 	@Override
-	public void run(Response response) throws RunnerException {
+	public WebResponse run() {
 		try {
-			method.invoke( object, context, response );
+			return (WebResponse) method.invoke( object, context );
 		} catch(InvocationTargetException e) {
-			throw new RunnerException("Unable to run method, " + method.getName(), (Exception)e.getCause());
+			return new ErrorResponse(e.getCause()).setCode(500).setHeader("Unable to run method, " + method.getName());
 		} catch (Exception e) {
-			throw new RunnerException("Failed while running " + method.getName(), e);
+			return new ErrorResponse(e).setCode(500).setHeader("Failed while running, " + method.getName());
 		}
 	}
 

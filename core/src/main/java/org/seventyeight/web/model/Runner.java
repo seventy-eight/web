@@ -1,8 +1,8 @@
 package org.seventyeight.web.model;
 
-import org.seventyeight.web.servlet.Response;
+import org.seventyeight.web.servlet.responses.WebResponse;
 
 public interface Runner {
-	public void run(Response response) throws RunnerException;
+	public WebResponse run();
 	public void injectContext(CallContext context);
 }

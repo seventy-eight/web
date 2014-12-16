@@ -16,6 +16,8 @@ import org.seventyeight.web.extensions.*;
 import org.seventyeight.web.nodes.User;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
+import org.seventyeight.web.servlet.responses.ErrorResponse;
+import org.seventyeight.web.servlet.responses.WebResponse;
 import org.seventyeight.web.utilities.JsonException;
 import org.seventyeight.web.utilities.JsonUtils;
 
@@ -113,15 +115,16 @@ public abstract class NodeDescriptor<T extends AbstractNode<T>> extends Descript
      */
     @PostMethod
     @API
-    public void doCreate( Request request, Response response ) throws ItemInstantiationException, IOException, ClassNotFoundException, JsonException {
+    public WebResponse doCreate( Request request ) throws ItemInstantiationException, IOException, ClassNotFoundException, JsonException {
     	JsonObject json = request.getJson();
         Core core = request.getCore();
         String title = JsonUtils.get( json, "title", null );
         if(title == null) {
-        	response.setStatus(Response.SC_NOT_ACCEPTABLE);
-        	response.getWriter().print("No title provided");
-        	return;
+        	//response.setStatus(Response.SC_NOT_ACCEPTABLE);
+        	//response.getWriter().print("No title provided");
+        	return new WebResponse().setHeader("No title provided").notAccepted();
         }
+        
         
         logger.debug( "Creating " + title );
         try {
@@ -129,13 +132,15 @@ public abstract class NodeDescriptor<T extends AbstractNode<T>> extends Descript
         	instance.updateConfiguration( json );
             instance.save();
             logger.debug("Finally done!!!!");
-        	response.setStatus(Response.SC_CREATED);
-            response.getWriter().print("{\"identifier\":\"" + instance.getIdentifier() + "\"}");
+        	//response.setStatus(Response.SC_CREATED);
+            //response.getWriter().print("{\"identifier\":\"" + instance.getIdentifier() + "\"}");
+            return WebResponse.makeJsonResponse().appendBody("{\"identifier\":\"" + instance.getIdentifier() + "\"}");
         } catch(Exception e) {
         	e.printStackTrace();
         	logger.log(Level.WARN, "Unable to create {}, {}", getType(), e);
-        	response.setStatus(Response.SC_NOT_ACCEPTABLE);
-        	response.getWriter().print(e.getMessage());
+        	//response.setStatus(Response.SC_NOT_ACCEPTABLE);
+        	//response.getWriter().print(e.getMessage());
+        	return new ErrorResponse(e).setHeader(e.getMessage()).notAccepted();
         }
     }
 

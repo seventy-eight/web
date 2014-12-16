@@ -8,6 +8,9 @@ import org.seventyeight.web.model.Autonomous;
 import org.seventyeight.web.model.Node;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
+import org.seventyeight.web.servlet.responses.ErrorResponse;
+import org.seventyeight.web.servlet.responses.FileResponse;
+import org.seventyeight.web.servlet.responses.WebResponse;
 
 import java.io.File;
 import java.io.IOException;
@@ -37,9 +40,8 @@ public class ThemeFiles implements Autonomous, Node {
     }
 
     @Override
-    public void autonomize( Request request, Response response ) throws IOException {
+    public WebResponse autonomize( Request request ) throws IOException {
         String requestedFile = request.getPathInfo();
-        response.setRenderType( Response.RenderType.NONE );
 
         requestedFile = requestedFile.replaceFirst( "^/?.*?/", "" );
         logger.debug( "[Request file] " + requestedFile );
@@ -48,20 +50,11 @@ public class ThemeFiles implements Autonomous, Node {
         File themeFile = null;
         try {
             themeFile = core.getThemeFile( request.getTheme(), request.getPlatform(), filename );
+            logger.debug( "THE THEME FILE IS " + themeFile );
+            return new FileResponse(themeFile);
         } catch ( IOException e ) {
-            try {
-                Response.NOT_FOUND_404.render( request, response );
-            } catch( TemplateException e1 ) {
-                throw new IOException( e1 );
-            }
-            return;
+            return new ErrorResponse(e).setCode(404).setHeader("File not found");
         }
-
-        logger.debug( "THE THEME FILE IS " + themeFile );
-
-        response.deliverFile( request, themeFile, true );
-
-
     }
 
     @Override

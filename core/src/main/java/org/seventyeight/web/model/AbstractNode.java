@@ -28,6 +28,8 @@ import org.seventyeight.web.nodes.User;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
 import org.seventyeight.web.servlet.Response.RenderType;
+import org.seventyeight.web.servlet.responses.ErrorResponse;
+import org.seventyeight.web.servlet.responses.WebResponse;
 import org.seventyeight.web.utilities.ExtensionUtils;
 import org.seventyeight.web.utilities.JsonException;
 import org.seventyeight.web.utilities.JsonUtils;
@@ -212,11 +214,13 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedN
     }
 
     public void setUpdated(Date date) {
+    	logger.debug("UPDATED IS {}", document.get("updated"));
         if(date != null) {
             document.set( "updated", date );
         } else {
             document.set( "updated", new Date() );
         }
+        logger.debug("UPDATED IS {}", document.get("updated"));
     }
 
     public void setUpdatedCall() {
@@ -301,7 +305,7 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedN
     }
 
     @PostMethod
-    public void doConfigurationSubmit( Request request, Response response ) throws JsonException, ClassNotFoundException, SavingException, ItemInstantiationException, IOException {
+    public WebResponse doConfigurationSubmit( Request request ) throws JsonException, ClassNotFoundException, SavingException, ItemInstantiationException, IOException {
         logger.debug( "Configuration submit" );
 
         try {
@@ -317,9 +321,11 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedN
 	        // Lastly, save
 	        save();
 
-	        response.getWriter().print("{\"id\":\"" + getIdentifier() + "\"}");
+	        //response.getWriter().print("{\"id\":\"" + getIdentifier() + "\"}");
+	        return WebResponse.makeJsonResponse().appendBody("{\"id\":\"" + getIdentifier() + "\"}");
         } catch(Exception e) {
-        	response.sendError(Response.SC_NOT_ACCEPTABLE, e.getMessage());
+        	//response.sendError(Response.SC_NOT_ACCEPTABLE, e.getMessage());
+        	return new ErrorResponse(e).notAccepted();
         }
     }
     
@@ -350,31 +356,31 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedN
     }
     
     @PostMethod
-    public void doChown(Request request, Response response) throws IOException {
+    public WebResponse doChown(Request request) throws IOException {
     	JsonObject json = request.getJson();
     	if(json == null) {
-    		response.setStatus(Response.SC_NOT_ACCEPTABLE);
-    		response.getWriter().println("No json provided");
-    		return;
+    		//response.setStatus(Response.SC_NOT_ACCEPTABLE);
+    		//response.getWriter().println("No json provided");
+    		return new WebResponse().setHeader("No Json provided").notAccepted();
     	}
     	
     	if(!json.has("newOwner")) {
-    		response.setStatus(Response.SC_NOT_ACCEPTABLE);
-    		response.getWriter().println("No new owner provided");
-    		return;
+    		//response.setStatus(Response.SC_NOT_ACCEPTABLE);
+    		//response.getWriter().println("No new owner provided");
+    		return new WebResponse().setHeader("No new owner provided").notAccepted();
     	}
     	
     	String ownerId = json.get("newOwner").getAsString();
 		try {
 			User owner = request.getCore().getNodeById(this, ownerId);
-			response.setStatus(Response.SC_OK);
-			response.getWriter().println("{}");
+			//response.setStatus(Response.SC_OK);
+			//response.getWriter().println("{}");
 			this.setOwner(owner);
-			this.save();
+			return WebResponse.makeEmptyJsonResponse();
 		} catch (Exception e) {
-    		response.setStatus(Response.SC_NOT_ACCEPTABLE);
-    		response.getWriter().println("No valid owner provided, " + ownerId);
-    		return;
+    		//response.setStatus(Response.SC_NOT_ACCEPTABLE);
+    		//response.getWriter().println("No valid owner provided, " + ownerId);
+			return new WebResponse().setHeader("No valid owner provided").notAccepted();
     	}
     }
     
@@ -389,14 +395,16 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedN
     }
     
     @DeleteMethod
-    public void doIndex(Request request, Response response) throws Exception {
-    	response.setRenderType(RenderType.NONE);
+    public WebResponse doIndex(Request request) throws Exception {
+    	//response.setRenderType(RenderType.NONE);
     	
     	if(parent instanceof DeletingParent) {
     		logger.debug("Deleting {}", this);
     		((DeletingParent) parent).deleteChild(this);
+    		return new WebResponse();
     	} else {
-    		response.sendError(Response.SC_METHOD_NOT_ALLOWED);
+    		//response.sendError(Response.SC_METHOD_NOT_ALLOWED);
+    		return new WebResponse().methodNotAllowed();
     	}
     }
 
@@ -545,12 +553,13 @@ public abstract class AbstractNode<T extends AbstractNode<T>> extends PersistedN
     }
 
     @GetMethod
-    public void doGetView(Request request, Response response) throws TemplateException, IOException {
-        response.setRenderType( Response.RenderType.NONE );
+    public WebResponse doGetView(Request request) throws TemplateException, IOException {
+        //response.setRenderType( Response.RenderType.NONE );
 
         String template = request.getValue( "view", "simpleIndex" );
 
-        response.getWriter().write( core.getTemplateManager().getRenderer( request ).renderObject( this, template + ".vm" ) );
+        //response.getWriter().write( core.getTemplateManager().getRenderer( request ).renderObject( this, template + ".vm" ) );
+        return new WebResponse().appendBody(core.getTemplateManager().getRenderer( request ).renderObject( this, template + ".vm" ));
     }
 
 

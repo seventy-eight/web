@@ -1,6 +1,7 @@
 package org.seventyeight.web.extensions;
 
 import com.google.gson.JsonObject;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDocument;
@@ -10,6 +11,7 @@ import org.seventyeight.web.model.*;
 import org.seventyeight.web.nodes.FileResource;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
+import org.seventyeight.web.servlet.responses.WebResponse;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -37,15 +39,17 @@ public class Attachments extends Action<Attachments> {
     }
 
     @PostMethod
-    public void doAttachFile( Request request, Response response ) {
+    public WebResponse doAttachFile( Request request ) {
         try {
             //FileResource fr = FileResource.upload( request, response );
             //addFile( fr );
             Core.superSave( this );
 
-            response.setStatus( HttpServletResponse.SC_OK );
+            //response.setStatus( HttpServletResponse.SC_OK );
+            return new WebResponse();
         } catch( Exception e ) {
-            response.setStatus( HttpServletResponse.SC_BAD_REQUEST );
+            //response.setStatus( HttpServletResponse.SC_BAD_REQUEST );
+        	return new WebResponse().notAccepted();
         }
     }
 
