@@ -16,7 +16,7 @@
         </div>
 
         <script type="text/javascript">
-            Utils.selectElement("/venue/getVenues", "venue", "venueContainer", "venueInput")
+            Utils.selectElement("/venues/getVenues", "venue", "venueContainer", "venueInput")
 
             $('#venueContainer').on('click', 'div', function(e) {
                 $(this).remove()
@@ -43,7 +43,7 @@
             </div>
 
         <script type="text/javascript">
-            Utils.selectElements("/artist/getArtists", "artists", "artistsContainer", "artistsInput")
+            Utils.selectElements("/artists/getArtists", "artists", "artistsContainer", "artistsInput")
 
             $('#artistsContainer').on('click', 'div', function(e) {
                 $(this).remove()

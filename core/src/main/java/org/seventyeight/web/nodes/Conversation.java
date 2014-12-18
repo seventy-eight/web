@@ -77,10 +77,13 @@ public class Conversation extends Resource<Conversation> {
 	}
 		
 	public Comment getRootComment() {
+		logger.debug("Getting root comment, {}", core);
         MongoDBQuery query = new MongoDBQuery().is( "conversation", getIdentifier() ).is("parent", getIdentifier()).is( "type", "comment" );
+        logger.debug("Query is {}", query);
         MongoDocument doc = MongoDBCollection.get( Comment.COMMENTS_COLLECTION ).findOne( query);
+        logger.debug("Retrieved dfocx is {}", doc);
         doc.set("resource", document.get("parent", null));
-                
+        logger.debug("Whoop!");
         return new Comment( core, this, doc );
 	}
 

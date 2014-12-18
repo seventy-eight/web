@@ -26,7 +26,7 @@ public class ErrorResponse extends WebResponse {
 
 	@Override
 	protected void writeBody(Request request, Response response) throws IOException {
-        logger.error( "Generating error: {}", e.getMessage() );
+        logger.log( Level.ERROR, "Generating error: {}", e );
         PrintWriter writer = response.getWriter();
         try {
             VelocityContext vc = new VelocityContext();
