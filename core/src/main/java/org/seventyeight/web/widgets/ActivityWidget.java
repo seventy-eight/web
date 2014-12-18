@@ -1,5 +1,7 @@
 package org.seventyeight.web.widgets;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDBCollection;
 import org.seventyeight.database.mongodb.MongoDBQuery;
 import org.seventyeight.database.mongodb.MongoDocument;
@@ -16,6 +18,8 @@ import java.util.List;
  * @author cwolfgang
  */
 public class ActivityWidget extends Widget {
+
+	private static Logger logger = LogManager.getLogger(ActivityWidget.class);
 	
 	private static final String ACLField = AbstractExtension.EXTENSIONS + "." + Descriptor.getJsonId(ACL.class.getName()) + ".read";
 
