@@ -327,7 +327,7 @@ Utils.fetchResourceViewAppend = function(id, container, view) {
     Utils.fetchResourceView(id, view, function(e) {
         $(container).append('<span style="padding-right:5px">' + e + '</span>');
         //alert(e);
-    });
+    }, function(e){});
 }
 
 Utils.fetchResourceViewAppendLink = function(id, container, view) {
@@ -337,14 +337,14 @@ Utils.fetchResourceViewAppendLink = function(id, container, view) {
     });
 }
 
-Utils.fetchResourceView = function(id, view, f) {
+Utils.fetchResourceView = function(id, view, f, e) {
     $.ajax({
         type: "GET",
         url: "/resource/" + id + "/getView" + (view !== undefined ? '?view=' + view : ''),
         success: function(data, textStatus, jqxhr){
             f(data);
         },
-        error: function(ajax, text, error) {alert(error)}
+        error: function(ajax, text, error) {e(error)}
     });
 }
 

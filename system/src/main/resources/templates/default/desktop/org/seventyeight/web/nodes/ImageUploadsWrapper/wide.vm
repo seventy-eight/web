@@ -22,10 +22,7 @@
 		#set($range = [$start..$end])
         #foreach($i in $range)
         	#set($id = $item.getImageIds().get($i))
-        
-            //Utils.fetchImage('$id', '#imageWrapper$item.getIdentifier()');
-            Utils.fetchResourceViewAppend('$id', '#imageWrapper$item.getIdentifier()', 'avatar'); 
-            //$('#imageWrapper$item.getIdentifier()').append('<img src="/resource/$id/file" style="width:100px"></img>');
+        	Utils.fetchResourceViewAppend('$id', '#imageWrapper$item.getIdentifier()', 'avatar'); 
         #end
         
         #if($item.getImageIds().size() > 4)

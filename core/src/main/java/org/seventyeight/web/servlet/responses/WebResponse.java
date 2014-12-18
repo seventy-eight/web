@@ -6,11 +6,15 @@ import java.util.List;
 
 import javax.servlet.http.Cookie;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
 
 public class WebResponse {
+	
+	private static Logger logger = LogManager.getLogger(WebResponse.class);
 	
 	public static final String CONTENT_TYPE_HTML = "text/html";
 	public static final String CONTENT_TYPE_JSON = "application/json";
@@ -110,6 +114,9 @@ public class WebResponse {
     		response.addCookie(c);
     	}
     	writeBody(request, response);
+    	response.setIntHeader(header, code);
+    	response.setStatus(code);
+    	logger.debug("RESPONSE CODE: {}", code);
     }
     
     protected void writeBody(Request request, Response response) throws IOException {

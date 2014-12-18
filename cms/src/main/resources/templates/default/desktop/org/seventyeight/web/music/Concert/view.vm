@@ -16,6 +16,6 @@
     	'$id' #if( $foreach.hasNext ), #end
     #end
     ];
-    Utils.resourceListHandler('container', 'artistInput', '/artist/getArtists', '', 'artist', ids);
+    Utils.resourceListHandler('container', 'artistInput', '/artists/getArtists', '', 'artist', ids);
 
 </script>
