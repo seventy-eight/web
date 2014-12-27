@@ -19,16 +19,16 @@
             url: "search",
             type: "POST",
             data: {query:$("#collectionQuery").val()},
-            success: function(data, textStatus, jqxhr){addResources(data);},
+            success: function(data, textStatus, jqxhr){addResources(JSON.parse(data));},
             error: function(ajax, text, error) {alert(error)}
         });
     }
 
     function addResources(dataList) {
-        for(idx in dataList) {
+    	var length = dataList.length;
+        for(var idx = 0 ; idx < length ; idx++) {
 
-            var data = dataList[idx];
-            var json = eval(data);
+            var json = dataList[idx];
             //$('<tr><td class="boxed" style="width:60%">' + json.document.badge + '</td><td style="width: 40%">' + printCollection(json.document.incollection) + '</td></tr>').appendTo($('#resourceList'));
             $('<tr><td class="boxed" style="width:60%">' + json.document.avatar + '</td><td style="width: 40%; text-align: left">' + printCollection(json.document._id, json.document.incollection) + '</td></tr>').insertBefore($('#resourceList'));
         }
