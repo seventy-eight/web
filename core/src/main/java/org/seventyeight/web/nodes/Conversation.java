@@ -224,9 +224,9 @@ public class Conversation extends Resource<Conversation> {
         
         comment.save();
         
-        	String resourceId = json.get("resource").getAsString();
-        	if(json.has("resource") && !json.get("resource").getAsString().isEmpty()) {
-        	try {
+    	if(json.has("resource") && !json.get("resource").getAsString().isEmpty()) {
+    		String resourceId = json.get("resource").getAsString();
+    		try {
 				Resource<?> r = core.getNodeById(this, resourceId);
 				r.touch();
 			} catch (NotFoundException e) {

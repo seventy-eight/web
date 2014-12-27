@@ -16,7 +16,7 @@
             type: "GET",
             data: {offset:offset, number:number},
             success: function(data, textStatus, jqxhr){addResources(data);},
-            error: function(ajax, text, error) {alert(error)}
+            error: function(ajax, text, error) {}
         });
     }
 
