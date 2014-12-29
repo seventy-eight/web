@@ -140,7 +140,7 @@ public class Collection extends Resource<Collection> implements Getable<Node> {
         }
     }
 
-    @PostMethod
+    @GetMethod
     public WebResponse doSearch( Request request ) throws IOException, NotFoundException, ItemInstantiationException, TemplateException {
         SearchHelper sh = new SearchHelper( this, request );
         sh.search();

@@ -301,3 +301,31 @@ div.targetNode {
 .inactiveConfigurationHeader {
     background-color: #dddbda;
 }
+
+.overlayContainer {
+	position:relative;
+	width:400px;
+	height:120px
+	
+}
+
+.overlayContent {
+	position:absolute;
+}
+
+.overlayContainer:hover .content {
+	opacity:0
+}
+
+.overlay {
+	opacity:0;
+	position:absolute;
+	z-index:999;
+	width:100%;
+	height:100%;
+}
+
+.overlayContainer:hover .overlay {
+	opacity:0.8
+}
+

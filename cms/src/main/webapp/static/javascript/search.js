@@ -1,7 +1,8 @@
 
-function Search(formId, queryInputId) {
+function Search(formId, queryInputId, overlay) {
 	this.query = "";
 	this.offset = 0;
+	this.overlay = overlay || function(e){};
 	
 	this.container = "#container";
 	this.moreId = '#more';
@@ -57,11 +58,10 @@ Search.prototype.populate = function(jsonResult) {
         	var data = jsonResult[i];
         	//alert(i + ":" + data);
             //$('<div class="result" id="node' + (i+this.offset) + '">' + data.document.badge + '</div>').hide().insertBefore(this.container).fadeIn(600);
-        	$('<div class="result" id="node' + (i+this.offset) + '">' + data.document.badge + '</div>').hide().appendTo(this.container).fadeIn(600);
+        	$('<div class="result overlayContainer" id="node' + (i+this.offset) + '"><div class="overlayContent">' + data.document.badge + '</div><div class="overlay">' + this.overlay(data.document) + '</div></div>').hide().appendTo(this.container).fadeIn(600);
             //getNode(data[i].document._id, "node" + (i+offset));
         }
 
-    	debugger;
         if( jsonResult.length === undefined || jsonResult.length < 10 ) {
             //$(this.moreId).hide();
         } else {

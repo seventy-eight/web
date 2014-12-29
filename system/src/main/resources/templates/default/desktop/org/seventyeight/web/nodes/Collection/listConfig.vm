@@ -2,56 +2,33 @@
 
 #menuBlock($item)
 
-<input id="collectionQuery" type="text" style="width: 80%">
+<form action="result" method="get" id="queryForm">
+    <input name="query" id="query" type="text" style="width: 80%"><br>
+    <input type="submit" value="Search">
+</form>
 
-<table style="width: 100%">
-    <tr id="resourceList">
-        <td></td>
-        <td></td>
-    </tr>
-</table>
-
-<input type="button" value="More" id="moreButton" onclick="getMoreResources()">
+<div id="container">
+</div>
 
 <script type="text/javascript">
-    function getMoreResources() {
-        $.ajax({
-            url: "search",
-            type: "POST",
-            data: {query:$("#collectionQuery").val()},
-            success: function(data, textStatus, jqxhr){addResources(JSON.parse(data));},
-            error: function(ajax, text, error) {alert(error)}
-        });
-    }
-
-    function addResources(dataList) {
-    	var length = dataList.length;
-        for(var idx = 0 ; idx < length ; idx++) {
-
-            var json = dataList[idx];
-            //$('<tr><td class="boxed" style="width:60%">' + json.document.badge + '</td><td style="width: 40%">' + printCollection(json.document.incollection) + '</td></tr>').appendTo($('#resourceList'));
-            $('<tr><td class="boxed" style="width:60%">' + json.document.avatar + '</td><td style="width: 40%; text-align: left">' + printCollection(json.document._id, json.document.incollection) + '</td></tr>').insertBefore($('#resourceList'));
-        }
-    }
-
-    function printCollection(id, inCollection) {
-        if(inCollection) {
-            return '<a href="remove?id=' + id + '">YAY</a>';
-        } else {
-            return "<span onclick=\"addResourceToCollection('" + id + "');\">NAY</span>";
-        }
-    }
-
-    function addResourceToCollection(id) {
-        alert("ADDING " + id);
-        $.ajax({
-            url: "add",
-            type: "POST",
-            data: {id:id},
-            success: function(data, textStatus, jqxhr){alert('Successful');},
-            error: function(ajax, text, error) {alert(error)}
-        });
-    }
+	
+	$("#container").on("click", ".toggleCollectionElement", function() {
+		alert("YEAH");
+	});
+	
+	var o = function(json) { return "<div style=\";width:100%;background-color:#565645;text-align:left;height:20px\"><a href=\"javascript:void(0)\" onclick=\"addResourceToCollection('" + json._id + "');\"><div style=\"float:right\" id=\"toggleCollection" + json._id + "\">" + json.incollection + "</div></a></div>"; };
+	var search = new Search('#queryForm', '#query', o);
+	
+	function addResourceToCollection(id) {
+		alert("ADDING " + id);
+	/*	$.ajax({
+			url: "add",
+			type: "POST",
+			data: {id:id},
+			success: function(data, textStatus, jqxhr){alert('Successful');},
+			error: function(ajax, text, error) {alert(error)}
+		});*/
+	}
 </script>
 
 #footerBlock()
