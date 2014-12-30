@@ -126,10 +126,16 @@ public class Collection extends Resource<Collection> implements Getable<Node> {
         if( id != null ) {
             if( Resource.exists( id ) ) {
                 //addCall( id );
-                add(id);
-                save();
-                //response.setStatus( HttpServletResponse.SC_OK );
-                return new WebResponse();
+            	if(containsId(id)) {
+            		//remove(id);
+            		find(id, true);
+            		save();
+            		return new WebResponse().appendBody("{\"added\":-1}");
+            	} else {
+            		add(id);
+            		save();
+            		return new WebResponse().appendBody("{\"added\":1}");
+            	}
             } else {
                 //response.setStatus( HttpServletResponse.SC_NOT_FOUND );
             	return new WebResponse().setCode(404);
@@ -163,6 +169,31 @@ public class Collection extends Resource<Collection> implements Getable<Node> {
         return parts;
     }
     */
+    
+    /**
+     * Returns the index of the found element. Or -1.
+     * @param id
+     * @param remove
+     * @return
+     */
+    public int find(String id, boolean remove) {
+    	logger.debug("Finding {}, REMOVE:{}", id, remove);
+    	List<MongoDocument> docs = document.getList("elements");
+    	//for(MongoDocument d : docs) {
+    	for(int i = 0 ; i < docs.size() ; i++) {
+    		MongoDocument d = docs.get(i);
+    		if(d.contains("_id") && d.get("_id").equals(id)) {
+    			logger.debug("FOUND!!!!");
+    			if(remove) {
+    				//docs.remove(i);
+    				document.removeFromArray("elements", i);
+    			}
+    			return i;
+    		}
+    	}
+    	
+    	return -1;
+    }
 
     public boolean containsId( String id ) {
         MongoDBQuery query = new MongoDBQuery().getId( this.getIdentifier() ).is( ELEMENTS_FIELD + "._id", id );
@@ -257,6 +288,7 @@ public class Collection extends Resource<Collection> implements Getable<Node> {
     }
 
     public void add(String id) {
+    	logger.debug("Adding {} to {}", id, this);
         int next = length();
         document.addToList( ELEMENTS_FIELD, new MongoDocument().set( "_id", id ).set( SORT_FIELD, next ) );
     }
@@ -313,6 +345,14 @@ public class Collection extends Resource<Collection> implements Getable<Node> {
         MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).remove( query );
     }
 
+    public void remove( String id ) {
+        logger.debug( "Removing " + id + " frin " + this );
+        MongoDocument getID = new MongoDocument().set( "_id", id );
+        MongoDBQuery query = new MongoDBQuery().elemMatch( "elements", getID ).getId( this.getIdentifier() );
+        logger.debug("COLLECTION QUEYR: {}", query);
+        MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).remove( query );
+    }
+    
     /*
     @Override
     public List<ContributingView> getAdministrativePartitions( Request request ) {

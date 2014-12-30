@@ -58,7 +58,7 @@ Search.prototype.populate = function(jsonResult) {
         	var data = jsonResult[i];
         	//alert(i + ":" + data);
             //$('<div class="result" id="node' + (i+this.offset) + '">' + data.document.badge + '</div>').hide().insertBefore(this.container).fadeIn(600);
-        	$('<div class="result overlayContainer" id="node' + (i+this.offset) + '"><div class="overlayContent">' + data.document.badge + '</div><div class="overlay">' + this.overlay(data.document) + '</div></div>').hide().appendTo(this.container).fadeIn(600);
+        	$('<div class="result overlayContainer" id="node' + (i+this.offset) + '"><div class="overlayContent">' + data.document.badge + '</div><div class="overlay">' + this.overlay(data.document, false) + '</div><div class="" style="height:100%">' + this.overlay(data.document, true) + '</div></div>').hide().appendTo(this.container).fadeIn(600);
             //getNode(data[i].document._id, "node" + (i+offset));
         }
 

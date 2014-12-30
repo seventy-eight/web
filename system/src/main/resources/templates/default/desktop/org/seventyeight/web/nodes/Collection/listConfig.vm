@@ -16,18 +16,59 @@
 		alert("YEAH");
 	});
 	
-	var o = function(json) { return "<div style=\";width:100%;background-color:#565645;text-align:left;height:20px\"><a href=\"javascript:void(0)\" onclick=\"addResourceToCollection('" + json._id + "');\"><div style=\"float:right\" id=\"toggleCollection" + json._id + "\">" + json.incollection + "</div></a></div>"; };
+	//var o = function(json) { return "<div style=\";width:100%;background-color:#565645;text-align:left;height:20px\"><a href=\"javascript:void(0)\" onclick=\"addResourceToCollection('" + json._id + "');\"><div style=\"float:right\" id=\"toggleCollection" + json._id + "\">" + json.incollection + "</div></a></div>"; };
+	var o = function(json, always) {
+		if(!always) {
+			var s = "<a href=\"javascript:void(0)\" onclick=\"addResourceToCollection('" + json._id + "');\">"; 
+			s += "<div style=\";width:100%;background-color:#565645;text-align:center;height:20px\">";
+			if(json.incollection) {
+				s += "Remove from collection";
+			} else {
+				s += "Add to collection";
+			}
+			
+			//s += "<div style=\"float:right\" id=\"toggleCollection" + json._id + "\">" + json.incollection + "</div>";
+			s += "</div></a>";
+			
+			return s;
+		} else {
+			
+			var s = "<div id=\"incollectionPane" + json._id + "\" style=\";width:100%;height:40px;background-color:green;text-align:center;";
+			if(json.incollection) {
+				s += "opacity:0.8";
+			} else {
+				s += "opacity:0";
+			}
+			
+			s += ";position:relative;top:63%;\">IN COLLECTION";
+						
+			s += "</div>";
+			
+			return s;
+		} 
+	};
 	var search = new Search('#queryForm', '#query', o);
 	
 	function addResourceToCollection(id) {
-		alert("ADDING " + id);
-	/*	$.ajax({
+		//alert("ADDING " + id);
+		$.ajax({
 			url: "add",
 			type: "POST",
 			data: {id:id},
-			success: function(data, textStatus, jqxhr){alert('Successful');},
+			success: function(data, textStatus, jqxhr){removePane(id, JSON.parse(data))},
 			error: function(ajax, text, error) {alert(error)}
-		});*/
+		});
+	}
+	
+	function removePane(id, json) {
+		//alert(id + ":" + JSON.stringify(json));
+		if(json.added < 0) {
+			//alert("REMOVE!");
+			$('#incollectionPane' + id).fadeTo(500, 0);
+		} else {
+			//alert("ADD!");
+			$('#incollectionPane' + id).fadeTo(500, 0.8);
+		}
 	}
 </script>
 

@@ -218,6 +218,11 @@ public class MongoDocument implements Document {
         BasicDBList list = (BasicDBList) document.get( key );
         return list.remove( value );
     }
+    
+    public Object removeFromArray(String key, int i) {
+    	BasicDBList list = (BasicDBList) document.get( key );
+    	return list.remove(i);
+    }
 
     /**
      * Add an entry to a field. If the entry doesn't exist, it will be created.
