@@ -222,7 +222,7 @@ public class Collection extends Resource<Collection> implements Getable<Node> {
                 d.set( "avatar", core.getTemplateManager().getRenderer( request ).renderObject( n, "avatar.vm" ) );
                 d.set("counter", counter);
                 result.add( d );
-
+                
                 counter++;
             }
         }
