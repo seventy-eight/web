@@ -18,6 +18,8 @@
 	    <script src="/static/javascript/jquery/upload/jquery.fileupload.js"></script>
 	    <script src="/static/javascript/jquery/upload/jquery.fileupload-process.js"></script>
 	    <script src="/static/javascript/jquery/upload/jquery.iframe-transport.js"></script>
+	    
+	    <script src="/static/javascript/jquery/modal.jquery.js"></script>
 	
 	    <script src="/static/javascript/jquery/upload/jquery.fileupload-ui.js"></script>
 	    <script src="/static/javascript/jquery.simplemodal.1.4.4.min.js"></script>

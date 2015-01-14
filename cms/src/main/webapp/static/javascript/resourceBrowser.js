@@ -5,59 +5,101 @@
  * The append argument is a function, that takes the returned json object as input. 
  */
 
-function ResourceBrowser(fetchFunction, number, urlFunction, overlay) {
+function ResourceBrowser(options /* fetchFunction, number, urlFunction, overlay */) {
+	this.options = {
+			fetchFunction: undefined,
+			number: 10,
+			urlFunction: undefined,
+			overlay: undefined,
+			onClickFunction: undefined, // 
+			container: '#container',
+			view: 'avatar',
+			moreId: '#more'
+	};
+	
+	// Overwrite default values
+	for(s in options){this.options[s] = options[s]}
+	
+	/*
 	this.fetchFunction = fetchFunction;
 	this.number = number;
 	this.urlFunction = urlFunction;
 	this.overlay = overlay;
-	this.offset = 0;
+	*/ 
 	
+	this.offset = 0;
+	/*
 	this.container = '#container';
 	this.view = 'avatar';
 	this.moreId = '#more';
+	*/
 }
 
 ResourceBrowser.prototype.fetch = function() {
-	//debugger;
-	this.fetchFunction(this);
+	this.options.fetchFunction(this);
 }
 
 ResourceBrowser.prototype.append = function(resources) {
 	var l = resources.length;
 	for(var i = 0 ; i < l ; i++) {
 		var r = resources[i].document;
-		var e = this.createElement(this.offset + i, r[this.view]);
-		
-		$(e).hide().appendTo(this.container).fadeIn(600);
+		var e = this.createElement(this.offset + i, r[this.options.view]);
+		console.log(e);
+		$(e).hide().appendTo(this.options.container).fadeIn(600);
 	}
 	
-	this.offset += this.number;
+	this.offset += this.options.number;
 	
     if( l < 10 ) {
         
     } else {
-    	$(this.moreId).show();
+    	$(this.options.moreId).show();
     	this.addMore();
     }
 }
 
 ResourceBrowser.prototype.createElement = function(idx, view) {
-	var e = '<a href="' + this.urlFunction(idx) + '"><div class="result overlayContainer" id="node' + idx + '">';
-	e += '<div class="overlayContent">' + view + '</div>';
-	if(this.overlay !== undefined) {
-		e += '<div class="overlay">' + this.overlay(data.document, false) + '</div>';
-		e += '<div class="" style="height:100%">' + this.overlay(data.document, true) + '</div>';
+	/*
+	var e = '<a href=';
+	if(this.options.urlFunction !== undefined) {
+		e += '"' + this.options.urlFunction(idx) + '"';
+	} else {
+		e += '"javascript:void()"';
 	}
-	e += '</div></a>';
+	*/
+
+	var e = "";
+	//debugger;
+	var ctx = this.options.onClickFunction;
+	$(this.options.container).on('click', '#node' + idx, function() {
+		ctx(idx);
+		$('#collectionModal').trigger('openModal');
+	});
+	
+	
+	
+	/*
+	if(this.options.onClickFunction !== undefined) {
+		e += ' onClick="' + this.options.onClickFunction + '(' + idx + ')"';
+	}
+	*/
+	
+	e += '<div class="result overlayContainer" id="node' + idx + '">';
+	e += '<div class="overlayContent">' + view + '</div>';
+	if(this.options.overlay !== undefined) {
+		e += '<div class="overlay">' + this.options.overlay(data.document, false) + '</div>';
+		e += '<div class="" style="height:100%">' + this.options.overlay(data.document, true) + '</div>';
+	}
+	e += '</div>';
 	
 	return e;
 }
 
 ResourceBrowser.prototype.addMore = function() {
 	var THIS = this;
-	$('<div class="result" style="text-align:center;margin:40px 40px 40px 40px" id="more">More</div>').hide().appendTo(this.container).fadeIn(600);
-	$(this.moreId).on('click', function(event) {
-		$(THIS.moreId).remove();
+	$('<div class="result" style="text-align:center;margin:40px 40px 40px 40px" id="more">More</div>').hide().appendTo(this.options.container).fadeIn(600);
+	$(this.options.moreId).on('click', function(event) {
+		$(THIS.options.moreId).remove();
 		THIS.fetch();
 	});
 }

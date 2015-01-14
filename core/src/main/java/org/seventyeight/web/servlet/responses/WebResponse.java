@@ -122,7 +122,7 @@ public class WebResponse {
     protected void writeBody(Request request, Response response) throws IOException {
     	response.setIntHeader(header, code);
     	if(buffer.length() > 0) {
-    		logger.debug("CONTENT IS {}", buffer);
+    		//logger.debug("CONTENT IS {}", buffer);
     		response.getWriter().write(buffer.toString());
     	} else {
     		

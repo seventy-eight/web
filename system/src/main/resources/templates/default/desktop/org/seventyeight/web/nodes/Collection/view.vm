@@ -1,0 +1,46 @@
+<div id="container">
+</div>
+
+
+<div id="collectionModal" style="border-style:solid;background-color:white;width:80%">
+HEJ
+</div>
+
+<script>
+
+	$('#collectionModal').easyModal({
+		top: 200,
+		overlay: 0.2,
+		overlayOpacity:0.3,
+		top:10,
+		fixedPosition:false
+	});
+
+	var ff = function(rb) {
+		$.ajax({
+            url: "fetch",
+            type: "GET",
+            data: {offset:rb.offset, number:rb.number},
+            success: function(data, textStatus, jqxhr){rb.append(JSON.parse(data));},
+            error: function(ajax, text, error) {alert(text);}
+        });
+	}
+	var urlf = function(idx) {return 'get/' + idx;}
+	var args = {
+		fetchFunction: ff,
+		number: 10,
+		//urlFunction: urlf,
+		onClickFunction: function(idx){
+			//$('#collectionModal').html("WHAT " + idx);
+			Utils.fetchResourceViewUrl('get/'+idx, 'view', function(data) {
+				$('#collectionModal').html(data);
+			}, alert);
+		}
+	};
+	//var ocf = function(idx){alert("Hej, " + idx);};
+	//var rb = new ResourceBrowser(ff, 10, urlf, undefined);
+	var rb = new ResourceBrowser(args);
+	rb.fetch();
+	
+	
+</script>

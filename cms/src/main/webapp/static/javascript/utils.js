@@ -348,6 +348,17 @@ Utils.fetchResourceView = function(id, view, f, e) {
     });
 }
 
+Utils.fetchResourceViewUrl = function(url, view, f, e) {
+    $.ajax({
+        type: "GET",
+        url: url + "/getView" + (view !== undefined ? '?view=' + view : ''),
+        success: function(data, textStatus, jqxhr){
+            f(data);
+        },
+        error: function(ajax, text, error) {e(error)}
+    });
+}
+
 Utils.removeId = function(id, removeUrl) {
     $.ajax({
         type: "DELETE",
