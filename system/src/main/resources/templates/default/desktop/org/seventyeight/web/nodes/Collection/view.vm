@@ -1,8 +1,10 @@
 <div id="container">
+<input id="currentCollectionId" type="hidden" value="0" readonly>
 </div>
 
 
 <div id="collectionModal" style="border-style:solid;background-color:white;width:80%">
+
 HEJ
 </div>
 
@@ -15,6 +17,38 @@ HEJ
 		top:10,
 		fixedPosition:false
 	});
+	
+    $(document).keydown(function (e) {
+    	if($('#collectionModal').is(':visible')) {
+	        if(e.keyCode === 37) {
+	            previous();
+	        }
+	        
+	        if(e.keyCode === 39) {
+	            next();
+	        }
+	    }
+    });
+    
+    function next() {
+    	var c = $('#currentCollectionId').val();
+    	var next = c++;
+		update(c);		
+    }
+    
+    function previous() {
+    	var c = $('#currentCollectionId').val();
+    	var next = c--;
+		update(c);		
+    }
+    
+    function update(c) {
+		Utils.fetchResourceViewUrl('get/' + c, 'view', function(data) {
+			$('#collectionModal').html(data);
+		}, alert);
+		
+		$('#currentCollectionId').val(c);
+    }
 
 	var ff = function(rb) {
 		$.ajax({
@@ -31,10 +65,14 @@ HEJ
 		number: 10,
 		//urlFunction: urlf,
 		onClickFunction: function(idx){
+			//$('#currentCollectionId').val(idx);
+			update(idx);
 			//$('#collectionModal').html("WHAT " + idx);
+			/*
 			Utils.fetchResourceViewUrl('get/'+idx, 'view', function(data) {
 				$('#collectionModal').html(data);
 			}, alert);
+			*/
 		}
 	};
 	//var ocf = function(idx){alert("Hej, " + idx);};

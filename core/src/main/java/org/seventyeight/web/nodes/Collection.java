@@ -199,6 +199,24 @@ public class Collection extends Resource<Collection> implements Getable<Node> {
         MongoDBQuery query = new MongoDBQuery().getId( this.getIdentifier() ).is( ELEMENTS_FIELD + "._id", id );
         return MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).count( query ) > 0;
     }
+    
+    @GetMethod
+    public WebResponse doNext(Request request) throws TemplateException, ItemInstantiationException, NotFoundException {
+    	int current = request.getInteger("current");
+    	int next = current + 1;
+    	
+    	List<MongoDocument> docs = document.getList( ELEMENTS_FIELD );
+    	
+    	if(docs.size() < next) {
+            MongoDocument d = docs.get(next);
+            Node n = core.getNodeById( this, d.getIdentifier() );
+            d.set( "avatar", core.getTemplateManager().getRenderer( request ).renderObject( n, "avatar.vm" ) );
+            d.set("counter", next);
+            return WebResponse.makeJsonResponse().appendBody(d.toString());
+    	} else {
+    		return WebResponse.makeEmptyJsonResponse();
+    	}
+    }
 
     @GetMethod
     public WebResponse doFetch( Request request ) throws NotFoundException, ItemInstantiationException, TemplateException, IOException {
