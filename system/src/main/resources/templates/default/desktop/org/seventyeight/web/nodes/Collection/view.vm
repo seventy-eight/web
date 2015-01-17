@@ -3,7 +3,7 @@
 </div>
 
 
-<div id="collectionModal" style="border-style:solid;background-color:white;width:80%">
+<div id="collectionModal" style="border-style:none;background-color:transparent;width:98%;text-align:center">
 
 HEJ
 </div>
@@ -63,20 +63,10 @@ HEJ
 	var args = {
 		fetchFunction: ff,
 		number: 10,
-		//urlFunction: urlf,
 		onClickFunction: function(idx){
-			//$('#currentCollectionId').val(idx);
 			update(idx);
-			//$('#collectionModal').html("WHAT " + idx);
-			/*
-			Utils.fetchResourceViewUrl('get/'+idx, 'view', function(data) {
-				$('#collectionModal').html(data);
-			}, alert);
-			*/
 		}
 	};
-	//var ocf = function(idx){alert("Hej, " + idx);};
-	//var rb = new ResourceBrowser(ff, 10, urlf, undefined);
 	var rb = new ResourceBrowser(args);
 	rb.fetch();
 	

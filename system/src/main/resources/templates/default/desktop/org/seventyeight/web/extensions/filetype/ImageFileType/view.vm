@@ -1,1 +1,25 @@
-<img src="$item.getUrl()file" style="max-width: inherit; width:100%">
+
+<div id="theimage">
+</div>
+
+<script>
+	var img = new Image();
+	img.onload = function() {
+  		//alert(this.width + 'x' + this.height);
+  		
+  		// 
+		var w = $(window).width() - 100;
+		var h = $(window).height() - 100;
+		var wr = w / this.width;
+		var hr = h / this.height;
+		
+		if(wr < hr) {
+			this.width = this.width * wr;
+		} else {
+			this.height = this.height * hr;
+		}
+	}
+	img.src = '$item.getUrl()file';
+	
+	$('#theimage').append(img);
+</script>
