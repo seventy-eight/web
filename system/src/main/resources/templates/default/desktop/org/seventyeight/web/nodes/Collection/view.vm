@@ -4,8 +4,7 @@
 
 
 <div id="collectionModal" style="border-style:none;background-color:transparent;width:98%;text-align:center">
-
-HEJ
+<!-- Container -->
 </div>
 
 <script>
@@ -32,14 +31,18 @@ HEJ
     
     function next() {
     	var c = $('#currentCollectionId').val();
-    	var next = c++;
-		update(c);		
+    	if(c < $item.size() - 1) {
+    		var next = c++;
+			update(c);
+		}		
     }
     
     function previous() {
     	var c = $('#currentCollectionId').val();
-    	var next = c--;
-		update(c);		
+    	if(c > 0) {
+	    	var next = c--;
+			update(c);
+		}
     }
     
     function update(c) {
