@@ -16,6 +16,7 @@ import org.seventyeight.web.Core;
 import org.seventyeight.web.authorization.ACL;
 import org.seventyeight.web.extensions.MenuContributor;
 import org.seventyeight.web.handlers.template.TemplateException;
+import org.seventyeight.web.handlers.template.TemplateManager.Renderer;
 import org.seventyeight.web.model.*;
 import org.seventyeight.web.servlet.Request;
 import org.seventyeight.web.servlet.Response;
@@ -217,12 +218,21 @@ public class Collection extends Resource<Collection> implements Getable<Node> {
     		return WebResponse.makeEmptyJsonResponse();
     	}
     }
+    
+    @GetMethod
+    public WebResponse doFetchAll(Request request) throws ItemInstantiationException, NotFoundException, TemplateException {
+    	return fetch(core.getTemplateManager().getRenderer( request ), 0, document.getList(ELEMENTS_FIELD).size());
+    }
 
     @GetMethod
     public WebResponse doFetch( Request request ) throws NotFoundException, ItemInstantiationException, TemplateException, IOException {
         int offset = request.getInteger( "offset", 0 );
         int number = request.getInteger( "number", 10 );
-        //response.setRenderType( Response.RenderType.NONE );
+        
+        return fetch(core.getTemplateManager().getRenderer( request ), offset, number);
+    }
+  
+    public WebResponse fetch(Renderer renderer, int offset, int number) throws ItemInstantiationException, NotFoundException, TemplateException {
 
         logger.debug( "Fetching " + number + " from " + offset + " from " + this );
 
@@ -237,7 +247,7 @@ public class Collection extends Resource<Collection> implements Getable<Node> {
             for( int i = offset ; i < stop ; i++ ) {
                 MongoDocument d = docs.get( i );
                 Node n = core.getNodeById( this, d.getIdentifier() );
-                d.set( "avatar", core.getTemplateManager().getRenderer( request ).renderObject( n, "avatar.vm" ) );
+                d.set( "avatar", renderer.renderObject( n, "avatar.vm" ) );
                 d.set("counter", counter);
                 result.add( d );
                 
