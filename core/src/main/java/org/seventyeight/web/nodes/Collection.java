@@ -2,6 +2,7 @@ package org.seventyeight.web.nodes;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import org.apache.logging.log4j.LogManager;
@@ -267,13 +268,15 @@ public class Collection extends Resource<Collection> implements Getable<Node> {
     
     @PostMethod
     public WebResponse doSetOrder(Request request) {
-    	logger.debug("JSON: {}", request.getJson());
-    	setOrder(request.getJson());
-    	save();
+    	JsonObject json = request.getJson();
+    	if(json.has("elements")) {
+    		setOrder(request.getJson().get("elements").getAsJsonArray());
+    		save();
+    	}
     	return new WebResponse();
     }
     
-    public void setOrder(JsonObject elements) {
+    public void setOrder(JsonArray elements) {
     	document.set("elements", elements);    	
     }
 

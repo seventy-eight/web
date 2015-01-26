@@ -1,5 +1,6 @@
 package org.seventyeight.database.mongodb;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
@@ -187,21 +188,47 @@ public class MongoDocument implements Document {
         	list.addAll((Collection<? extends Object>) value);
         	document.put(key, list);
         } else if(value instanceof JsonElement) {
-        	if(value instanceof JsonObject) {
-	        	JsonObject json = (JsonObject) value;
-	        	for(Entry<String, JsonElement> k : json.entrySet()) {
-	        		document.set(key, );
-	        		
-	        	}
-        	} else if(value instanceof JsonPrimitive) {
-        		document.set(key, );
-        	}
+        	document.put(key, addJson((JsonElement) value));
         	
         } else {
             document.put( key, value );
         }
 
         return (R) this;
+    }
+    
+    public static Object addJson(JsonElement json) {
+    	if(json.isJsonObject()) {
+    		BasicDBObject doc = new BasicDBObject();
+    		for(Entry<String, JsonElement> k : ((JsonObject) json).entrySet()) {
+    			Object d = addJson(k.getValue());
+    			doc.put(k.getKey(), d);
+    		}
+    		
+    		return doc;
+    	} else if(json.isJsonArray()) {
+    		BasicDBList list = new BasicDBList();
+    		for(JsonElement e : (JsonArray)json) {
+    			list.add(addJson(e));
+    		}
+    		
+    		return list;
+    	} else if(json.isJsonPrimitive()) {
+    		JsonPrimitive p = (JsonPrimitive) json;
+    		if(p.isString()) {
+    			return ((JsonPrimitive)json).getAsString();
+    		} else if(p.isNumber()) {
+    			try {
+    				return p.getAsInt();
+    			} catch(NumberFormatException e) {
+    				return p.getAsFloat();
+    			}
+    		} else {
+    			return p.getAsBoolean();
+    		}
+    	} else {
+    		return null;
+    	}
     }
 
     public MongoDocument setList( String key ) {
