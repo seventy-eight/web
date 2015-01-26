@@ -221,7 +221,8 @@ public class Collection extends Resource<Collection> implements Getable<Node> {
     
     @GetMethod
     public WebResponse doFetchAll(Request request) throws ItemInstantiationException, NotFoundException, TemplateException {
-    	return fetch(core.getTemplateManager().getRenderer( request ), 0, document.getList(ELEMENTS_FIELD).size());
+    	String template = request.getValue("template", "avatar");
+    	return fetch(core.getTemplateManager().getRenderer( request ), 0, document.getList(ELEMENTS_FIELD).size(), template);
     }
 
     @GetMethod
@@ -229,10 +230,10 @@ public class Collection extends Resource<Collection> implements Getable<Node> {
         int offset = request.getInteger( "offset", 0 );
         int number = request.getInteger( "number", 10 );
         
-        return fetch(core.getTemplateManager().getRenderer( request ), offset, number);
+        return fetch(core.getTemplateManager().getRenderer( request ), offset, number, "avatar");
     }
   
-    public WebResponse fetch(Renderer renderer, int offset, int number) throws ItemInstantiationException, NotFoundException, TemplateException {
+    public WebResponse fetch(Renderer renderer, int offset, int number, String template) throws ItemInstantiationException, NotFoundException, TemplateException {
 
         logger.debug( "Fetching " + number + " from " + offset + " from " + this );
 
@@ -247,19 +248,33 @@ public class Collection extends Resource<Collection> implements Getable<Node> {
             for( int i = offset ; i < stop ; i++ ) {
                 MongoDocument d = docs.get( i );
                 Node n = core.getNodeById( this, d.getIdentifier() );
-                d.set( "avatar", renderer.renderObject( n, "avatar.vm" ) );
+                d.set( "avatar", renderer.renderObject( n, template + ".vm" ) );
                 d.set("counter", counter);
+                d.set("title", n.getDisplayName());
                 result.add( d );
                 
                 counter++;
             }
         }
+       
 
         //PrintWriter writer = response.getWriter();
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();
         //writer.write( gson.toJson( result ) );
         return WebResponse.makeJsonResponse().appendBody(gson.toJson( result ));
+    }
+    
+    @PostMethod
+    public WebResponse doSetOrder(Request request) {
+    	logger.debug("JSON: {}", request.getJson());
+    	setOrder(request.getJson());
+    	save();
+    	return new WebResponse();
+    }
+    
+    public void setOrder(JsonObject elements) {
+    	document.set("elements", elements);    	
     }
 
     public Node getItem(int itemNumber) throws NotFoundException, ItemInstantiationException {

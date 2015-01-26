@@ -1,5 +1,8 @@
 package org.seventyeight.database.mongodb;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
@@ -10,6 +13,7 @@ import org.bson.types.ObjectId;
 import org.seventyeight.database.Document;
 
 import java.util.*;
+import java.util.Map.Entry;
 
 /**
  * @author cwolfgang
@@ -182,6 +186,17 @@ public class MongoDocument implements Document {
         	BasicDBList list = new BasicDBList();
         	list.addAll((Collection<? extends Object>) value);
         	document.put(key, list);
+        } else if(value instanceof JsonElement) {
+        	if(value instanceof JsonObject) {
+	        	JsonObject json = (JsonObject) value;
+	        	for(Entry<String, JsonElement> k : json.entrySet()) {
+	        		document.set(key, );
+	        		
+	        	}
+        	} else if(value instanceof JsonPrimitive) {
+        		document.set(key, );
+        	}
+        	
         } else {
             document.put( key, value );
         }

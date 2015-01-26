@@ -1,0 +1,48 @@
+#headerBlock($definition)
+
+#menuBlock($item)
+
+<ul id="collectionElements" class="sortable">
+</ul>
+
+<input type="button" id="saveOrder" value="hej">
+
+<script>
+	 $(function() {
+		$( "#collectionElements" ).sortable();
+		$( "#collectionElements" ).disableSelection();
+	});
+	$(function() {
+	
+		$.ajax({
+            url: "fetchAll",
+            type: "GET",
+            data: {template:"small"},
+            success: function(data, textStatus, jqxhr){makeList(JSON.parse(data));},
+            error: function(ajax, text, error) {alert(text);}
+        });
+	});
+	
+	function makeList(json) {
+	
+		for(var e in json) {
+			$("#collectionElements").append(" <li class=\"ui-state-default\" style=\"height:auto\"><span class=\"ui-icon ui-icon-arrowthick-2-n-s\"></span>" + json[e].document.title + " - " + json[e].document.avatar + "<div name=\"elements\"><input name=\"_id\" value=\"" + json[e].document._id + "\" hidden></div></li>");
+		}
+	}
+	
+	$("#saveOrder").click(function() {
+		var j = Utils.getJsonElement(document.getElementById("collectionElements"));
+		$.ajax({
+            url: "setOrder",
+            type: "POST",
+            data: JSON.stringify(j),
+            contentType:"application/json; charset=utf-8",
+            success: function(data, textStatus, jqxhr){alert("Done: " + data);},
+            error: function(ajax, text, error) {alert(text);}
+        });
+	});
+	
+</script>
+
+
+#footerBlock()

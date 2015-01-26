@@ -29,6 +29,10 @@ Dispatch.prototype.dispatch = function(element, data) {
                 this.visitInput(element, data);
                 break;
 
+            case "LI":
+                this.visitLi(element, data);
+                break;
+                
             case "SELECT":
                 this.visitSelect(element, data);
                 break;
@@ -51,6 +55,10 @@ Dispatch.prototype.dispatch = function(element, data) {
 
             case "TR":
                 this.visitTr(element, data);
+                break;
+
+            case "UL":
+                this.visitUl(element, data);
                 break;
         }
     }
@@ -142,6 +150,11 @@ Dispatch.prototype.visitForm = function(element, data) {
     this.dispatchChilds(element, data);
 }
 
+Dispatch.prototype.visitLi = function(element, data) {
+    console.log("Visiting list item");
+    this.dispatchChilds(element, data);
+}
+
 Dispatch.prototype.visitTable = function(element, data) {
     console.log("Visiting table");
     this.dispatchChilds(element, data);
@@ -159,6 +172,11 @@ Dispatch.prototype.visitTr = function(element, data) {
 
 Dispatch.prototype.visitTd = function(element, data) {
     console.log("Visiting table cell");
+    this.dispatchChilds(element, data);
+}
+
+Dispatch.prototype.visitUl = function(element, data) {
+    console.log("Visiting unordered list");
     this.dispatchChilds(element, data);
 }
 
