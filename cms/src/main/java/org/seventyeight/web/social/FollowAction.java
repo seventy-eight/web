@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.seventyeight.database.DatabaseException;
 import org.seventyeight.database.mongodb.MongoDocument;
 import org.seventyeight.utils.GetMethod;
 import org.seventyeight.utils.PostMethod;
@@ -87,10 +88,22 @@ public class FollowAction extends Action<FollowAction> {
 		}
 	}
 	
+	public void addFollow(String id, String type) throws DatabaseException {
+		if(!document.contains("following")) {
+			document.set("following", new MongoDocument());
+		}
+		
+		MongoDocument f = document.get("following");
+		f.putrarray(type, true, id);
+		save();
+	}
+	
 	@PostMethod
-	public WebResponse doIndex(Request request) throws IOException {
+	public WebResponse doIndex(Request request) throws IOException, DatabaseException {
     	String id = request.getValue("id");
-    	follow(id);
+    	logger.debug("Following {}", id);
+    	//follow(id);
+    	addFollow(id, "ALL");
     	//response.setContentType("application/json");
     	//response.getWriter().print("{\"following\":true}");
     	//response.getWriter().flush();

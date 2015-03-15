@@ -374,6 +374,7 @@ Utils.removeId = function(id, removeUrl) {
 
 
 Utils.resourceListHandler = function(container, autoCompleteInput, inputSource, addUrl, callbackClass, ids, inputCallback) {
+	console.log("IDS: ", ids);
 	if(typeof(inputCallback) === "undefined") {
 		inputCallback = function(id){ return "<div style=\";float:left\" id=\"top_" + id + "\"><div class=\"newResource\" id=\"" + id + "\" style=\"\">Waiting for " + id + "</div><div name=\"ids\" class=\"targetValue\" style=\"display:none\">" + id + "</div><div onclick=\"Utils.removeId('" + id + "', 'get/')\">REMOVE</div></div>" };
 	}

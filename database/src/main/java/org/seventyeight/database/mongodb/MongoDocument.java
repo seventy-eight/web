@@ -11,6 +11,7 @@ import com.mongodb.MapReduceCommand;
 
 import org.bson.BSONObject;
 import org.bson.types.ObjectId;
+import org.seventyeight.database.DatabaseException;
 import org.seventyeight.database.Document;
 
 import java.util.*;
@@ -158,6 +159,33 @@ public class MongoDocument implements Document {
         } else {
             return defaultDoc;
         }
+    }
+    
+    public void putrarray(Object value, boolean create, String ... keys) throws DatabaseException {
+    	DBObject current = document;
+        int i = 0;
+        for( ; i < keys.length ; i++ ) {
+            String key = keys[i];
+            //System.out.println( current.toMap() );
+            Object o = current.get( key );
+
+            if(o == null) {
+            	if(create) {
+            		o = new BasicDBList();
+            		current.put(key, o);
+            	} else {
+            		throw new DatabaseException(key + " does not exist");
+            	}
+            }
+            current = (DBObject) o;
+        }
+        
+        if(!BasicDBList.class.isInstance(current)) {
+        	throw new DatabaseException(current + " is not instance of DBList");
+        }
+        
+        BasicDBList l = (BasicDBList) current;
+        l.add(value);
     }
 
     @Override
