@@ -14,7 +14,7 @@
 		overlay: 0.2,
 		overlayOpacity:0.3,
 		top:10,
-		fixedPosition:false
+		fixedPosition:true
 	});
 	
     $(document).keydown(function (e) {
