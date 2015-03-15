@@ -142,7 +142,7 @@ public class Upload implements Node {
             try {
                 if( UploadHandler.commonsUploader.isValid( item ) ) {
                     String filename = UploadHandler.commonsUploader.getUploadFilename( item );
-                    UploadHandler.UploadFile uf = UploadHandler.DefaultFilenamer.getUploadDestination( request.getUser().getIdentifier().toString(), filename, core.getUploadPath() );
+                    UploadHandler.UploadFile uf = UploadHandler.DefaultFilenamer.getUploadDestination(request.getUser().getIdentifier().toString(), filename, core.getUploadPath(), uploadSession);
 
                     UploadHandler.commonsUploader.write( item, uf.file );
 

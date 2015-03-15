@@ -60,7 +60,7 @@ public class UploadHandler implements Runnable {
             try {
                 if( uploader.isValid( item ) ) {
                     String filename = uploader.getUploadFilename( item );
-                    UploadFile uf = filenamer.getUploadDestination( pathPrefix, filename, core.getUploadPath() );
+                    UploadFile uf = filenamer.getUploadDestination( pathPrefix, filename, core.getUploadPath(), "");
 
                     uploader.write( item, uf.file );
                     FileResource.FileDescriptor descriptor = core.getDescriptor( FileResource.class );
@@ -96,6 +96,41 @@ public class UploadHandler implements Runnable {
         public String relativePath;
         public String extension;
         public String session;
+    }
+    
+    public static UploadFile generateSessionFilename(String filename, String pathPrefix, File uploadPath, String session) {
+        Date now = new Date();
+        int mid = filename.lastIndexOf( "." );
+        String fname = filename;
+        String ext = null;
+        if( mid > -1 ) {
+            ext = filename.substring( mid + 1, filename.length() );
+            fname = filename.substring( 0, mid );
+        }
+
+        String relativePathString = pathPrefix + "/" + formatYear.format( now ) + "/" + formatMonth.format( now ) + "/" + session;
+
+        File path = new File( uploadPath, relativePathString );
+        File relativeFile = new File( relativePathString, filename );
+        logger.debug( "Trying to create path " + path );
+        path.mkdirs();
+        File file = new File( path, filename );
+        int cnt = 0;
+        while( file.exists() ) {
+            file = new File( path, fname + "_" + cnt + ( ext != null ? "." + ext : "" ) );
+            cnt++;
+        }
+
+        logger.debug( "FILE: " + file.getAbsolutePath() );
+        logger.debug( "FILE: " + relativeFile );
+
+        UploadFile uf = new UploadFile();
+        uf.file = file;
+        uf.relativeFile = relativeFile;
+        uf.relativePath = relativePathString;
+        uf.extension = ext;
+
+        return uf;
     }
 
     /**
@@ -140,14 +175,14 @@ public class UploadHandler implements Runnable {
 
 
     public static interface Filenamer {
-        public UploadFile getUploadDestination( String pathPrefix, String filename, File uploadPath );
+        public UploadFile getUploadDestination(String pathPrefix, String filename, File uploadPath, String uploadSession);
     }
 
     public static class DefaultFilenamer implements Filenamer {
 
         @Override
-        public UploadFile getUploadDestination( String pathPrefix, String filename, File uploadPath ) {
-            return generateFile( filename, pathPrefix, uploadPath );
+        public UploadFile getUploadDestination( String pathPrefix, String filename, File uploadPath, String uploadSession ) {
+            return generateSessionFilename( filename, pathPrefix, uploadPath, uploadSession);
         }
     }
 
