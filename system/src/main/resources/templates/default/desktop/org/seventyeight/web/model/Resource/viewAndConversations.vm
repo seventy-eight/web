@@ -1,0 +1,37 @@
+<div style="position:fixed">
+	<div id="viewAndConversationsButton$item.getIdentifier()" style="text-align:left;background-color:#acdadc;opacity:0.95; ;border-style:solid; width:200px" class="">
+		Conversations <span id="viewAndConversationCount$item.getIdentifier()"></span>
+		
+	</div>
+	<div id="viewAndConversationsDiv$item.getIdentifier()" style=""></div>
+</div>
+
+#render($item)
+
+
+<script>
+	$(function() {
+	    $.ajax({
+	        type: "GET",
+	        url: "/resource/$item.getIdentifier()/conversations/getNumber",
+	        success: function(data, textStatus, jqxhr){$('#viewAndConversationCount$item.getIdentifier()').html(data)},
+	        error: function(ajax, text, error) {alert(error)}
+	    });
+	})
+	$('#viewAndConversationsButton$item.getIdentifier()').on('click', function(e) {
+		if($('#viewAndConversationsDiv$item.getIdentifier()').is(':empty')) {
+			Utils.fetchResourceComments('$item.getIdentifier()', 'viewAndConversationsDiv$item.getIdentifier()');
+
+			$('#viewAndConversationsDiv$item.getIdentifier()').show();
+		} else {
+			console.log("ELEMENT:", $('#viewAndConversationsDiv$item.getIdentifier()'), ", vis:", $('#viewAndConversationsDiv$item.getIdentifier()').is(":visible"));
+			if($('#viewAndConversationsDiv$item.getIdentifier()').is(":visible")) {
+				$('#viewAndConversationsDiv$item.getIdentifier()').hide();
+			} else {
+				$('#viewAndConversationsDiv$item.getIdentifier()').show();
+			}
+		}
+		
+	});
+	
+</script>

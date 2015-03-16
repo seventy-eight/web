@@ -6,7 +6,6 @@ function Conversations(resourceId_, container_) {
 }
 
 Conversations.prototype.get = function() {
-	//alert("Fetching " + this.resourceId);
 	var THIS = this;
     $.ajax({
         type: "GET",

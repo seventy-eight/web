@@ -50,3 +50,27 @@ $(function() {
 
 </script>
 #end
+
+#macro(commentForm $id)
+	<form method="post" id="conversationForm$id" style="min-width: inherit;">
+	    <input type="text" name="title" style="width: 100%">
+	    <input type="hidden" name="parent" value="$id">
+	    
+		<div class="ui-widget" style="width: 100%">
+			Group
+		    <input id="conversationGroupInput$id">
+		</div>
+		
+		<div id="conversationGroupContainer$id">
+		
+		</div>
+	    
+	    <textarea style="width: 100%" name="comment"></textarea>
+	    <button id="conversationSubmit$id" class="button">Send</button>
+	</form>
+	
+	<script type="text/javascript">
+	    Utils.resourceListHandler('conversationGroupContainer$id', 'conversationGroupInput$id', '/group/getGroups', undefined, 'artist');
+	
+	</script>
+#end
