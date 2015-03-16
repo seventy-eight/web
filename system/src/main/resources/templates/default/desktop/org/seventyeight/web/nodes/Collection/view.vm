@@ -10,10 +10,9 @@
 <script>
 
 	$('#collectionModal').easyModal({
-		top: 200,
 		overlay: 0.2,
 		overlayOpacity:0.3,
-		top:10,
+		top:00,
 		fixedPosition:true
 	});
 	
@@ -46,7 +45,7 @@
     }
     
     function update(c) {
-		Utils.fetchResourceViewUrl('get/' + c, 'view', function(data) {
+		Utils.fetchResourceViewUrl('get/' + c, 'viewAndConversations', function(data) {
 			$('#collectionModal').html(data);
 		}, alert);
 		

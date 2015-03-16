@@ -359,6 +359,11 @@ Utils.fetchResourceViewUrl = function(url, view, f, e) {
     });
 }
 
+Utils.fetchResourceComments = function(resourceId, containerId) {
+	var conversations = new Conversations(resourceId, containerId);
+	conversations.get();
+}
+
 Utils.removeId = function(id, removeUrl) {
     $.ajax({
         type: "DELETE",

@@ -92,6 +92,11 @@ public class Conversations extends Action<Conversations> implements Getable<Conv
     	return MongoDBCollection.get(Core.NODES_COLLECTION_NAME).count(query);
     }
 	
+	@GetMethod
+	public WebResponse doGetNumber(Request request) {
+		return new WebResponse().appendBody(getNumberOfConversations());
+	}
+	
     @PostMethod
     public WebResponse doAdd(Request request) throws ItemInstantiationException, ClassNotFoundException, TemplateException, IOException {
     	//response.setRenderType( Response.RenderType.NONE );
