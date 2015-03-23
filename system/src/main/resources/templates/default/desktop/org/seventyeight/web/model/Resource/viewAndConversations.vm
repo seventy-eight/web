@@ -7,9 +7,7 @@ $item.getIdentifier()
 	<div id="viewAndConversationsDiv$item.getIdentifier()" style=";height:1000px;overflow:scroll;">
 		<div class="viewAndConversationsComments$item.getIdentifier()"></div>
 		#commentForm($item.getIdentifier())
-		<div id="$item.getIdentifier()-conversations" style="min-width: inherit">
-
-		</div>
+		<div id="$item.getIdentifier()-conversations" style="min-width: inherit"></div>
 	</div>
 	
 	
@@ -31,11 +29,10 @@ $item.getIdentifier()
 	})
 	
 	$('#viewAndConversationsButton$item.getIdentifier()').on('click', function(e) {
-		if($('#viewAndConversationsComments$item.getIdentifier()').is(':empty')) {
-			alert("HEJ");
-			debugger;
+		if($('#$item.getIdentifier()-conversations').attr('generated') === undefined) {
 			Utils.fetchResourceComments('$item.getIdentifier()', '$item.getIdentifier()-conversations');
 
+			$('#$item.getIdentifier()-conversations').attr('generated', "valid");
 			$('#viewAndConversationsDiv$item.getIdentifier()').show();
 		} else {
 			console.log("ELEMENT:", $('#viewAndConversationsDiv$item.getIdentifier()'), ", vis:", $('#viewAndConversationsDiv$item.getIdentifier()').is(":visible"));
