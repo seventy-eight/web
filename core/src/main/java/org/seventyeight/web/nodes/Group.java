@@ -248,7 +248,7 @@ public class Group extends Resource<Group> implements Authorizable {
 
                 //PrintWriter writer = response.getWriter();
                 //writer.print( MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).find( query, 0, 10 ) );
-                return new WebResponse().appendBody(MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).find( query, 0, 10 ));
+                return WebResponse.makeJsonResponse().appendBody(MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).find( query, 0, 10 ));
             } else {
                 //response.getWriter().write( "{}" );
             	return JsonResponse.empty();

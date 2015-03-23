@@ -35,8 +35,9 @@ Conversations.prototype.insertConversation = function(view) {
 }
 
 Conversations.insertConversation = function(d) {
-//	debugger;
+	debugger;
     var c = eval("(" + d + ")");
+    var o = $("#" + c.document.parent + "-conversations");
 	$("#" + c.document.parent + "-conversations").append(c.document.view + "<br>");
 }
 
@@ -184,21 +185,29 @@ $(document).on("click", ".conversation", function(){
 
 // Submit a new conversation
 //$( "#conversationSubmit" ).click(function(event) {
-$(document).on("click", '#conversationSubmit', function(event) {
+$(document).on("click", '.conversationSubmit', function(event) {
+	
     event.preventDefault();
-    var form = $('#conversationForm');
+    //var form = $('#conversationForm');
+    var form = event.target.parentElement;
+    var url = "conversations/add";
+    if($(form).children("input[name='parent']").length) {
+    	var id = $(form).children("input[name='parent']");
+    	url = "/resource/" + id[0].value + "/conversations/add";
+    }
 
     // Remove previously added json inputs
     $(form).children("input[name='json']").remove();
 
     // Add new json input
-    Utils.addJsonElement( form[0] );
+    Utils.addJsonElement( form );
     $.ajax({
         type: "POST",
-        url: "conversations/add",
-        data: form.serialize(),
+        url: url,
+        data: $(form).serialize(),
         //success: function(data, textStatus, jqxhr){$(this).parent()[0].reset();addPost(data)},
         success: function(data, textStatus, jqxhr){
+        	//debugger;
         	Conversations.insertConversation(data)
         },
         error: function(ajax, text, error) {alert(error)}
@@ -207,7 +216,7 @@ $(document).on("click", '#conversationSubmit', function(event) {
 
 
 $(document).on("click", '.commentSubmit', function(event) {
-	//alert("HEY");
+	alert("HEY");
     event.preventDefault();
     //Utils.addJsonElement( document.getElementById('commentForm') );
     var form = $(this).parent();

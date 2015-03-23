@@ -1,16 +1,27 @@
-<div style="position:fixed">
-	<div id="viewAndConversationsButton$item.getIdentifier()" style="text-align:left;background-color:#acdadc;opacity:0.95; ;border-style:solid; width:200px" class="">
-		Conversations <span id="viewAndConversationCount$item.getIdentifier()"></span>
-		
+$item.getIdentifier()
+<div style="width:50%;position:fixed;">
+	<div id="viewAndConversationsButton$item.getIdentifier()" style="text-align:left;background-color:#acdadc;opacity:0.95; ;border-style:solid; width:99%" class="">
+		Conversations <span id="viewAndConversationCount$item.getIdentifier()"></span>	
 	</div>
-	<div id="viewAndConversationsDiv$item.getIdentifier()" style=""></div>
+	
+	<div id="viewAndConversationsDiv$item.getIdentifier()" style=";height:1000px;overflow:scroll;">
+		<div class="viewAndConversationsComments$item.getIdentifier()"></div>
+		#commentForm($item.getIdentifier())
+		<div id="$item.getIdentifier()-conversations" style="min-width: inherit">
+
+		</div>
+	</div>
+	
+	
 </div>
 
 #render($item)
 
 
 <script>
+	// Count
 	$(function() {
+		$('#viewAndConversationsDiv$item.getIdentifier()').hide();
 	    $.ajax({
 	        type: "GET",
 	        url: "/resource/$item.getIdentifier()/conversations/getNumber",
@@ -18,9 +29,12 @@
 	        error: function(ajax, text, error) {alert(error)}
 	    });
 	})
+	
 	$('#viewAndConversationsButton$item.getIdentifier()').on('click', function(e) {
-		if($('#viewAndConversationsDiv$item.getIdentifier()').is(':empty')) {
-			Utils.fetchResourceComments('$item.getIdentifier()', 'viewAndConversationsDiv$item.getIdentifier()');
+		if($('#viewAndConversationsComments$item.getIdentifier()').is(':empty')) {
+			alert("HEJ");
+			debugger;
+			Utils.fetchResourceComments('$item.getIdentifier()', '$item.getIdentifier()-conversations');
 
 			$('#viewAndConversationsDiv$item.getIdentifier()').show();
 		} else {
