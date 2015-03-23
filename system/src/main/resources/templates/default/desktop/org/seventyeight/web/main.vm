@@ -52,7 +52,7 @@
         <div style="width: 100%; border-style: none; margin-bottom: 5px">
             #if($request.isAuthenticated())
                 <a href="$request.getUser().getUrl()" class="button">Profile</a>
-                <a href="/group/new" class="button">Add group</a>
+                <a href="/groups/new" class="button">Add group</a>
                 <a href="/upload/" class="button">Upload file</a>
                 <a href="/topic/new" class="button">Add topic</a>
                 <a href="/collection/new" class="button">Add collection</a>

@@ -66,11 +66,11 @@ $(function() {
 		</div>
 	    
 	    <textarea style="width: 100%" name="comment"></textarea>
-	    <button id="conversationSubmit$id" class="button">Send</button>
+	    <button id="" class="conversationSubmit button">Send</button>
 	</form>
 	
 	<script type="text/javascript">
-	    Utils.resourceListHandler('conversationGroupContainer$id', 'conversationGroupInput$id', '/group/getGroups', undefined, 'artist');
+	    Utils.resourceListHandler('conversationGroupContainer$id', 'conversationGroupInput$id', '/groups/getGroups', undefined, 'artist');
 	
 	</script>
 #end

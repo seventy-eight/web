@@ -54,7 +54,8 @@ public class ExecuteUtils {
             return getRenderRunner(object, urlName, imposter );
         }
         
-        return null;
+        //return null;
+        throw new IllegalArgumentException(request.getUri() + ", " + request.getMethodType().toString() + " was not found");
     }
 
     public static void render(Object object, String method ) throws NotFoundException, TemplateException, IOException {

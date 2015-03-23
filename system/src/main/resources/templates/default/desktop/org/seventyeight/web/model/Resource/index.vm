@@ -68,11 +68,11 @@
 				</div>
                 
                 <textarea style="width: 100%" name="comment"></textarea>
-                <button id="conversationSubmit" class="button">Send</button>
+                <button id="" class="button conversationSubmit">Send</button>
             </form>
 
             <script type="text/javascript">
-			    Utils.resourceListHandler('conversationGroupContainer', 'conversationGroupInput', '/group/getGroups', undefined, 'artist');
+			    Utils.resourceListHandler('conversationGroupContainer', 'conversationGroupInput', '/groups/getGroups', undefined, 'artist');
 
             </script>
 

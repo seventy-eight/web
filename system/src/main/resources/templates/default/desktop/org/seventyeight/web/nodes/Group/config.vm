@@ -1,4 +1,4 @@
-#multipleDynamicInput("Users" "users" "/user/getUsers" $item.getMembers())
+#multipleDynamicInput("Users" "users" "/users/getUsers" $item.getMembers())
 
 
 
