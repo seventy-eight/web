@@ -1,4 +1,18 @@
 
+<img src="$item.getUrl()file" id="theimage">
+
+<script>
+	$(function() {
+	debugger;
+		var element = $('#theimage')[0];
+		var parent = element.parentNode;
+		var w = $(parent).css('width');
+		$(element).width(parent.clientWidth);
+		$(element).height(parent.clientHeight);
+	})
+</script>
+
+<!--
 <div id="theimage">
 </div>
 
@@ -7,7 +21,8 @@
 	img.onload = function() {
   		//alert(this.width + 'x' + this.height);
   		
-  		// 
+  		//
+  		/* 
 		var w = $(window).width() - 100;
 		var h = $(window).height() - 100;
 		var wr = w / this.width;
@@ -18,8 +33,11 @@
 		} else {
 			this.height = this.height * hr;
 		}
+		*/
 	}
 	img.src = '$item.getUrl()file';
 	
 	$('#theimage').append(img);
 </script>
+
+-->

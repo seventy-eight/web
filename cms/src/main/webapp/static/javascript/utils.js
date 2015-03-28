@@ -377,6 +377,13 @@ Utils.removeId = function(id, removeUrl) {
     });
 }
 
+Utils.getDimensions = function(marginx, marginy) {
+	var w = $(window).width() - marginx;
+	var h = $(window).height() - marginy;
+	
+	return {width:w, height:h};
+}
+
 
 Utils.resourceListHandler = function(container, autoCompleteInput, inputSource, addUrl, callbackClass, ids, inputCallback) {
 	console.log("IDS: ", ids);

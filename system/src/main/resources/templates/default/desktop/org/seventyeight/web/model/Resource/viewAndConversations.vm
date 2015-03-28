@@ -1,19 +1,20 @@
-$item.getIdentifier()
-<div style="width:50%;position:fixed;">
-	<div id="viewAndConversationsButton$item.getIdentifier()" style="text-align:left;background-color:#acdadc;opacity:0.95; ;border-style:solid; width:99%" class="">
-		Conversations <span id="viewAndConversationCount$item.getIdentifier()"></span>	
-	</div>
-	
-	<div id="viewAndConversationsDiv$item.getIdentifier()" style=";height:1000px;overflow:scroll;">
-		<div class="viewAndConversationsComments$item.getIdentifier()"></div>
-		#commentForm($item.getIdentifier())
-		<div id="$item.getIdentifier()-conversations" style="min-width: inherit"></div>
-	</div>
-	
-	
-</div>
 
-#render($item)
+
+<table id="viewandconversation" style="border-style:solid">
+	<tr>
+		<td style="text-align:center;width:60%">
+			#render($item)
+		</d>
+		
+		<td style="width:40%">
+			<div id="viewAndConversationsDiv$item.getIdentifier()" style="overflow:scroll;">
+				<div class="viewAndConversationsComments$item.getIdentifier()"></div>
+				#commentForm($item.getIdentifier())
+				<div id="$item.getIdentifier()-conversations" style="min-width: inherit"></div>
+			</div>
+		</td>
+	</tr>
+</table>
 
 
 <script>
@@ -27,22 +28,28 @@ $item.getIdentifier()
 	        error: function(ajax, text, error) {alert(error)}
 	    });
 	})
+
+	$(function() {
+		alert("jjawjd");
+		// Sizing table
+		var d = Utils.getDimensions(100, 100);
+		alert(d);
+		$('#viewandconversation').width(d.width);
+		$('#viewandconversation').height(d.height);
+		 
+		Utils.fetchResourceComments('$item.getIdentifier()', '$item.getIdentifier()-conversations');
+
+		$('#$item.getIdentifier()-conversations').attr('generated', "valid");
+		$('#viewAndConversationsDiv$item.getIdentifier()').show();
+	})
 	
 	$('#viewAndConversationsButton$item.getIdentifier()').on('click', function(e) {
-		if($('#$item.getIdentifier()-conversations').attr('generated') === undefined) {
-			Utils.fetchResourceComments('$item.getIdentifier()', '$item.getIdentifier()-conversations');
-
-			$('#$item.getIdentifier()-conversations').attr('generated', "valid");
-			$('#viewAndConversationsDiv$item.getIdentifier()').show();
+		console.log("ELEMENT:", $('#viewAndConversationsDiv$item.getIdentifier()'), ", vis:", $('#viewAndConversationsDiv$item.getIdentifier()').is(":visible"));
+		if($('#viewAndConversationsDiv$item.getIdentifier()').is(":visible")) {
+			$('#viewAndConversationsDiv$item.getIdentifier()').hide();
 		} else {
-			console.log("ELEMENT:", $('#viewAndConversationsDiv$item.getIdentifier()'), ", vis:", $('#viewAndConversationsDiv$item.getIdentifier()').is(":visible"));
-			if($('#viewAndConversationsDiv$item.getIdentifier()').is(":visible")) {
-				$('#viewAndConversationsDiv$item.getIdentifier()').hide();
-			} else {
-				$('#viewAndConversationsDiv$item.getIdentifier()').show();
-			}
-		}
-		
+			$('#viewAndConversationsDiv$item.getIdentifier()').show();
+		}		
 	});
 	
 </script>
