@@ -3,7 +3,13 @@
 
 <script>
 	$(function() {
-	debugger;
+		debugger;
+		var img = document.getElementById("theimage");
+		img.doResize = function() {
+			//alert("HEJ");
+			console.log("ajdjajwd");
+		}
+		
 		var element = $('#theimage')[0];
 		var parent = element.parentNode;
 		var w = $(parent).css('width');
@@ -17,6 +23,18 @@
 </div>
 
 <script>
+	var div = document.getElementById("theimage");
+	div.addEventListener("resize", function() {alert("HEY")});
+
+	Utils.setTheImageSize = function(maxDim) {
+		var w = $('#theimage').width();
+		var h = $('#theimage').height();
+		if(w < h) {
+			this.width = this.width * wr;
+		} else {
+			this.height = this.height * hr;
+		}
+	}
 	var img = new Image();
 	img.onload = function() {
   		//alert(this.width + 'x' + this.height);
