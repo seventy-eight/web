@@ -1,59 +1,47 @@
 
-
-<table id="viewandconversation" style="border-style:solid;width:250px">
-	<tr>
-		<td style="text-align:center;width:60%" id="viewcell">
-			#render($item)
-		</d>
-		
-		<td style="width:40%">
-			<div id="viewAndConversationsDiv$item.getIdentifier()" style="overflow:scroll;">
-				<div class="viewAndConversationsComments$item.getIdentifier()"></div>
-				#commentForm($item.getIdentifier())
-				<div id="$item.getIdentifier()-conversations" style="min-width: inherit"></div>
-			</div>
-		</td>
-	</tr>
-</table>
+<div style="width:100%;height:inherit">
+	<div style="width:80%;float:left;height:inherit" id="content">
+		#render($item)
+	</div>
+	<div style="float:right;height:inherit;width:20%;border-style:none">
+		<div id="viewAndConversationsDiv$item.getIdentifier()" style="overflow:scroll;overflow-x: hidden;;width:99%;height:100%;">
+			<div class="viewAndConversationsComments$item.getIdentifier()"></div>
+			#commentForm($item.getIdentifier())
+			<div id="$item.getIdentifier()-conversations" style="width:inherit"></div>
+		</div>
+	</div>
+</div>
 
 
 <script>
 	// Count
 	$(function() {
-		$('#viewAndConversationsDiv$item.getIdentifier()').hide();
+		//$('#viewAndConversationsDiv$item.getIdentifier()').hide();
 	    $.ajax({
 	        type: "GET",
 	        url: "/resource/$item.getIdentifier()/conversations/getNumber",
 	        success: function(data, textStatus, jqxhr){$('#viewAndConversationCount$item.getIdentifier()').html(data)},
 	        error: function(ajax, text, error) {alert(error)}
 	    });
-	    
-	    // Set size
-	    
-	    
 	})
 
 	$(function() {
-		alert("jjawjd");
+		//alert("jjawjd");
 		// Sizing table
-		var d = Utils.getDimensions(100, 100);
-		alert(JSON.stringify(d));
+		//var d = Utils.getDimensions(100, 100);
+		//alert(JSON.stringify(d));
 		//$('#viewandconversation').width(d.width);
 		//$('#viewandconversation').height(d.height);
 		
 		//$('#viewandconversation').width("250px");
 		
-		/*
-		debugger;
-		var first = $('#viewcell').first().children().first();
-		first[0].doResize();
 		Utils.fetchResourceComments('$item.getIdentifier()', '$item.getIdentifier()-conversations');
-		*/
-
-		$('#$item.getIdentifier()-conversations').attr('generated', "valid");
-		$('#viewAndConversationsDiv$item.getIdentifier()').show();
+		
+		//$('#$item.getIdentifier()-conversations').attr('generated', "valid");
+		//$('#viewAndConversationsDiv$item.getIdentifier()').show();
 	})
 	
+	/*
 	$('#viewAndConversationsButton$item.getIdentifier()').on('click', function(e) {
 		console.log("ELEMENT:", $('#viewAndConversationsDiv$item.getIdentifier()'), ", vis:", $('#viewAndConversationsDiv$item.getIdentifier()').is(":visible"));
 		if($('#viewAndConversationsDiv$item.getIdentifier()').is(":visible")) {
@@ -62,5 +50,6 @@
 			$('#viewAndConversationsDiv$item.getIdentifier()').show();
 		}		
 	});
+	*/
 	
 </script>
