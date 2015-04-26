@@ -1,5 +1,1 @@
 #render($item "view" false $item.getFileType().getClass())
-
-<br>
-
-$item.getDocument().getDBObject()

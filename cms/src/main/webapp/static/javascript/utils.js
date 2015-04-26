@@ -384,6 +384,25 @@ Utils.getDimensions = function(marginx, marginy) {
 	return {width:w, height:h};
 }
 
+Utils.setDimensionsWithMargins = function(id, x, y) {
+	//var e = $(id)[0];
+	var w = $(window).width();
+	var h = $(window).height();
+	var wr = w / $(id).width();
+	var hr = h / $(id).height();
+
+	$(id).width(w - x);
+	$(id).height(h -y );
+	
+	/*
+	if(wr < hr) {
+		$(id).width($(id).width() * wr);
+	} else {
+		$(id).height($(id).height() * hr);
+	}
+	*/
+}
+
 
 Utils.resourceListHandler = function(container, autoCompleteInput, inputSource, addUrl, callbackClass, ids, inputCallback) {
 	console.log("IDS: ", ids);

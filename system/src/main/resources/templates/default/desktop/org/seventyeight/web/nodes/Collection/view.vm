@@ -3,7 +3,7 @@
 </div>
 
 
-<div id="collectionModal" style="border-style:none;background-color:transparent;width:98%;text-align:center">
+<div id="collectionModal" style="border-style:solid;background-color:transparent;width:90%;text-align:center">
 <!-- Container -->
 </div>
 
@@ -12,12 +12,16 @@
 	$('#collectionModal').easyModal({
 		overlay: 0.2,
 		overlayOpacity:0.3,
-		top:00,
+		top:10,
 		fixedPosition:true
 	});
 	
+	$(function() {
+		Utils.setDimensionsWithMargins('#collectionModal', 100, 50);
+	})
+	
     $(document).keydown(function (e) {
-    	if($('#collectionModal').is(':visible')) {
+    	if($('#collectionModal').is(':visible') && !($(":input").is(":focus"))) {
 	        if(e.keyCode === 37) {
 	            previous();
 	        }

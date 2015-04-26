@@ -1,6 +1,69 @@
 
-<img src="$item.getUrl()file" id="theimage">
+<!--<img src="$item.getUrl()file" id="theimage">-->
 
+<!--<div id="theimage" style="width:inherit;height:inherit"></div>-->
+
+
+
+
+<script>
+	var div = document.getElementById("theimage");
+
+	var img = new Image();
+	img.onload = function() {
+		var wr = this.width;
+		var hr = this.height;
+		var w = $(window).width();
+		var h = $(window).height();
+		var pw = this.parentElement.offsetWidth;
+		var ph = this.parentElement.offsetHeight;
+		var jqpw = $(this.parentElement).width();
+		var jqph = $(this.parentElement).height();
+		//alert("This.w = " + wr + ", h: " + hr + ", ww: " + w + ", wh: " + h + "\npw: " + pw + ", ph: " + ph + "\nw<h: " + (wr<hr) + "\njqpw: " + jqpw + ", jqph: " + jqph);
+		
+		//debugger;
+		
+		if(wr > pw || hr > ph) {
+			var ratioR = wr / hr;
+			var ratioP = pw  / ph;
+			
+			//alert("RATIOS. R: " + ratioR + ", P: " + ratioP);
+			
+		
+			var rwidth = ratioR * wr;
+			var rheight = ratioR * hr;
+			var dw = (pw - wr);
+			var dh = (ph - hr);
+			if(ratioR > ratioP) {
+				this.width = pw;
+			} else {
+				this.height = ph;
+			}
+			/*
+			if(wr > hr) {
+				if(dh < dw) {
+					this.width = pw;
+				} else {
+					this.height = ph;
+				}
+			} else {
+				if(dw < dh) {
+					this.height = ph;
+				} else {
+					this.width = pw;
+				}
+			}
+			*/
+		}
+	}
+	img.src = '$item.getUrl()file';
+	
+	$('#content').append(img);
+</script>
+
+
+
+<!--
 <script>
 	$(function() {
 		debugger;
@@ -17,7 +80,7 @@
 		$(element).height(parent.clientHeight);
 	})
 </script>
-
+-->
 <!--
 <div id="theimage">
 </div>
