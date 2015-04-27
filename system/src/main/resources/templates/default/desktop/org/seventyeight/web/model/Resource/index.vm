@@ -28,8 +28,8 @@
         </tr>
     #end
 
-    <tr style="max-width: inherit;">
-        <td style="width:auto;height: 100%;max-width: inherit;padding: 0px; margin: 0px" colspan="2">
+    <tr style="max-width: inherit;width:inherit;height: inherit">
+        <td style="width:inherit;height: inherit;max-width: inherit;padding: 0px; margin: 0px" colspan="2" class="fullScreenWidth">
             #render($item "view")
 
         </td>
