@@ -404,7 +404,7 @@ public abstract class Core implements CoreSystem {
      * @return The last valid {@link Node} on the path, adding the extra tokens, if any, to the the token list.
      */
     public Node resolveNode( TokenList tokens, User user ) throws NotFoundException, UnsupportedEncodingException, ItemInstantiationException, NoAuthorizationException {
-        //logger.debug( "Resolving " + path );
+        logger.debug( "Resolving " + path );
         //StringTokenizer tokenizer = new StringTokenizer( URLDecoder.decode( path, "ISO-8859-1" ), "/" );
         //StringTokenizer tokenizer = new StringTokenizer( path, "/" );
 
@@ -414,8 +414,8 @@ public abstract class Core implements CoreSystem {
 
         while( tokens.hasMore() ) {
             String token = tokens.next();
-            logger.debug( "Current: {}", current );
-            logger.debug( "Token  : {}", token );
+            //logger.debug( "Current: {}", current );
+            //logger.debug( "Token  : {}", token );
 
             /* Find a child node */
 

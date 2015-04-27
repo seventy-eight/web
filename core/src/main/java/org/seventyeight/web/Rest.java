@@ -60,7 +60,7 @@ public class Rest extends HttpServlet {
 
         Core core = (Core) getServletContext().getAttribute( "core" );
 
-        logger.debug( "Query  : {]", rqs.getQueryString() );
+        logger.debug( "Query  : {}", rqs.getQueryString() );
         logger.debug( "URI    : {}", rqs.getRequestURI() );
         logger.debug( "METHOD : {}", rqs.getMethod() );
         logger.debug( "CORE   : {}", core );
