@@ -15,24 +15,21 @@ Following, <span id="following">N/A</span>
 	    });
 	});
 	
-	function changeFollowStatus(json) {
-		
-		//var f = (json.following !== undefined ? json.following : false);
+	function changeFollowStatus(data) {
+		var json = JSON.parse(data);
 		var f = json.following || false;
-		alert("WHWHW: " + f);
-		//$('#following').html("YEAH : " + JSON.stringify(json));
 		if(f) {
-			$('#following').html("You are following");
+			$('#following').html("You are following, <a onclick=\"followThis(true);return false;\">UNFOLLOW</a>");
 		} else {
-			$('#following').html("You are NOT following, <a onclick=\"followThis();return false;\">FOLLOW</a>");
+			$('#following').html("You are NOT following, <a onclick=\"followThis(false);return false;\">FOLLOW</a>");
 		}
 	}
 	
-	function followThis() {
+	function followThis(unfollow) {
+		var type = unfollow ? "DELETE" : "POST";
 	    $.ajax({
-	        type: "POST",
-	        url: "/resource/$request.getUser().getIdentifier()/follow/",
-	        data: {id:"$context.getIdentifier()"},
+	        type: type,
+	        url: "/resource/$request.getUser().getIdentifier()/follow/?id=$context.getIdentifier()",
 	        success: function(data, textStatus, jqxhr){changeFollowStatus(data)},
 	        error: function(ajax, text, error) {alert(error)}
 	    });
