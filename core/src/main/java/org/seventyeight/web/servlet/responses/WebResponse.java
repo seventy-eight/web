@@ -128,4 +128,11 @@ public class WebResponse {
     		
     	}
     }
+
+	@Override
+	public String toString() {
+		return "Webresponse: " + buffer.toString();
+	}
+    
+    
 }

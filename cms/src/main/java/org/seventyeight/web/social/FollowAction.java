@@ -75,11 +75,14 @@ public class FollowAction extends Action<FollowAction> {
 	 * Determines whether or not this parent follows the node with the given id.
 	 */
 	public boolean isFollowing(String id) {
-		List<String> ids = document.getObjectList2("following");
-		logger.debug("FOLLOW: {}", ids);
-		return ids.contains(id);
+		logger.debug("DOCUMENT FOR FOLLOW: {}", document);
+		//List<String> ids = document.getObjectList2("following");
+		MongoDocument d = document.getr2("following", id);
+		logger.debug("FOLLOW: {}", d);
+		return d != null;
 	}
 	
+	@Deprecated
 	public void follow(String id) {
 		logger.debug("IS LFOOWOFLS {}", isFollowing(id));
 		if(!isFollowing(id)) {

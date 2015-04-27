@@ -156,9 +156,9 @@ public class Conversations extends Action<Conversations> implements Getable<Conv
         //MongoDBQuery query = new MongoDBQuery().is( "parent", ((AbstractNode<?>) parent).getIdentifier() ).is( "type", "conversation" ).in("ACL.read", groupIds);
     	MongoDBQuery query = new MongoDBQuery().is( "parent", ((AbstractNode<?>) parent).getIdentifier() ).is( "type", "conversation" ).in(AbstractNode.fullAclReadField, groupIds);
         MongoDocument sort = new MongoDocument().set( "created", 1 );
-        logger.fatal("--->{}", query);
+        //logger.fatal("--->{}", query);
         List<MongoDocument> docs = MongoDBCollection.get( Core.NODES_COLLECTION_NAME ).find( query, offset, number, sort );
-        logger.fatal("RES:{}", docs);
+        //logger.fatal("RES:{}", docs);
         //PrintWriter writer = response.getWriter();
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();

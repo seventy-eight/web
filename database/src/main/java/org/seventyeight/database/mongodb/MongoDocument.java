@@ -138,7 +138,7 @@ public class MongoDocument implements Document {
         int i = 0;
         for( ; i < keys.length ; i++ ) {
             String key = keys[i];
-            System.out.println( current.toMap() );
+            //System.out.println( current.toMap() );
             Object o = current.get( key );
 
             if( o == null ) {
@@ -273,7 +273,7 @@ public class MongoDocument implements Document {
             document.put( key, list );
             //list = (BasicDBList) document.get( key );
         }
-        System.out.println( "------>" + list );
+        //System.out.println( "------>" + list );
 
         if( value instanceof MongoDocument ) {
             list.add( ((MongoDocument)value).getDBObject() );
@@ -401,7 +401,7 @@ public class MongoDocument implements Document {
     }
 
     public MongoDocument removeField( String fieldName ) {
-        document.removeField( fieldName );
+        document.removeField(fieldName);
 
         return this;
     }

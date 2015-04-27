@@ -95,7 +95,7 @@ public class JsonUtils {
         JsonObject jo = (JsonObject) parser.parse( json );
 
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        System.out.println( gson.toJson( jo ) );
+        //System.out.println( gson.toJson( jo ) );
 
         return jo;
     }
@@ -113,7 +113,7 @@ public class JsonUtils {
         JsonObject jo = (JsonObject) parser.parse( writer.toString() );
 
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        System.out.println( gson.toJson( jo ) );
+        //System.out.println( gson.toJson( jo ) );
 
         return jo;
     }
@@ -129,7 +129,7 @@ public class JsonUtils {
         JsonObject jo = (JsonObject) parser.parse( sb.toString() );
 
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        System.out.println( gson.toJson( jo ) );
+        //System.out.println( gson.toJson( jo ) );
 
         return jo;
     }
