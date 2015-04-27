@@ -428,7 +428,7 @@ public abstract class Core implements CoreSystem {
             if( current instanceof Parent ) {
                 next = ((Parent)current).getChild( token );
             }
-            logger.debug( "Found node is {}", next );
+            //logger.debug( "Found node is {}", next );
 
             /* If there's no child, try an action */
             if( next == null ) {

@@ -1,10 +1,10 @@
 
 <div style="width:100%;height:inherit">
-	<div style="width:80%;float:left;height:inherit" id="content">
+	<div style="width:80%;float:left;height:inherit;" id="content">
 		#render($item)
 	</div>
 	<div style="float:right;height:inherit;width:20%;border-style:none">
-		<div id="viewAndConversationsDiv$item.getIdentifier()" style="overflow:scroll;overflow-x: hidden;;width:99%;height:100%;">
+		<div id="viewAndConversationsDiv$item.getIdentifier()" style="border-style:solid;overflow:scroll;overflow-x: hidden;;width:99%;height:100%;">
 			<div class="viewAndConversationsComments$item.getIdentifier()"></div>
 			#commentForm($item.getIdentifier())
 			<div id="$item.getIdentifier()-conversations" style="width:inherit"></div>

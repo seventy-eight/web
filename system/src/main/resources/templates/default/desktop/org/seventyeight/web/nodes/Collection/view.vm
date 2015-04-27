@@ -3,7 +3,7 @@
 </div>
 
 
-<div id="collectionModal" style="border-style:solid;background-color:transparent;width:90%;text-align:center">
+<div id="collectionModal" style="border-style:none;background-color:transparent;width:90%;text-align:center">
 <!-- Container -->
 </div>
 
