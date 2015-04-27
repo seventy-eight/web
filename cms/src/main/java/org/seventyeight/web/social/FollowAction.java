@@ -8,6 +8,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.seventyeight.database.DatabaseException;
 import org.seventyeight.database.mongodb.MongoDocument;
+import org.seventyeight.utils.DeleteMethod;
 import org.seventyeight.utils.GetMethod;
 import org.seventyeight.utils.PostMethod;
 import org.seventyeight.web.Core;
@@ -88,6 +89,15 @@ public class FollowAction extends Action<FollowAction> {
 		}
 	}
 	
+	public void unfollow(String id) {
+		if(!document.contains("following")) {
+			return;
+		}
+		
+		MongoDocument f = document.get("following");
+		f.removeField(id);
+	}
+	
 	public void addFollow(String id, String type) throws DatabaseException {
 		if(!document.contains("following")) {
 			document.set("following", new MongoDocument());
@@ -99,24 +109,33 @@ public class FollowAction extends Action<FollowAction> {
 	}
 	
 	@PostMethod
+	@DeleteMethod
 	public WebResponse doIndex(Request request) throws IOException, DatabaseException {
     	String id = request.getValue("id");
-    	logger.debug("Following {}", id);
-    	//follow(id);
-    	addFollow(id, "ALL");
-    	//response.setContentType("application/json");
-    	//response.getWriter().print("{\"following\":true}");
-    	//response.getWriter().flush();
-    	return WebResponse.makeJsonResponse().appendBody("{\"following\":true}");
+    	if(request.isRequestPost()) {
+	    	logger.debug("Following {}", id);
+	    	addFollow(id, "ALL");
+	    	return WebResponse.makeJsonResponse().appendBody("{\"id\": \"" + id + "\", \"following\": true}");
+    	} else if(request.isRequestDelete()) {
+	    	logger.debug("Unfollowing {}", id);
+	    	unfollow(id);
+	    	return WebResponse.makeJsonResponse().appendBody("{\"id\": \"" + id + "\", \"following\": false}");    		
+    	}
+    	
+    	throw new IllegalArgumentException("Request is not supported.");
 	}
 	
     @GetMethod
     public WebResponse doIsFollowing(Request request) throws IOException {
     	String id = request.getValue("id");
+    	logger.debug("Is following.... {}", id);
     	//response.setContentType("application/json");
     	//response.getWriter().print("{\"following\":" + (isFollowing(id) ? "true" : "false") + "}");
     	//response.getWriter().flush();
-    	return WebResponse.makeJsonResponse().appendBody("{\"following\":" + (isFollowing(id) ? "true" : "false") + "}");
+    	WebResponse response = WebResponse.makeJsonResponse().appendBody("{\"id\": \"" + id + "\", \"following\":" + (isFollowing(id) ? "true" : "false") + "}");
+    	logger.debug("RESPOENE: {}", response);
+    	
+    	return response;
     }
     
     /*
